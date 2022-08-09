@@ -3,9 +3,9 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import components from "@/components/UI";
+import '@/styles/UI.scss'
 
 const app = createApp(App);
-console.log(components);
 components.forEach(component => {
 	app.component(component.name, component)
 })

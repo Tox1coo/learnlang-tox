@@ -1,5 +1,10 @@
 import NavBar from '@/components/UI/NavBar';
-
+import MyInput from '@/components/UI/MyInput';
+import MyButtonAuth from '@/components/UI/MyButtonAuth';
+import MyInputImage from '@/components/UI/MyInputImage';
 export default [
-	NavBar
+	NavBar,
+	MyInput,
+	MyButtonAuth,
+	MyInputImage
 ]
