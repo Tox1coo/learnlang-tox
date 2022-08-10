@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { app, storage } from '@/store/config'
+import { app } from '@/store/config'
+import { getDatabase, set, ref, onValue, push } from "firebase/database";
 import { getAuth } from "firebase/auth"
 const auth = getAuth(app);
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+const database = getDatabase(app)
+
 import axios from 'axios'
 export const lang = {
 	state() {
@@ -137,16 +139,17 @@ export const lang = {
 			nativeLang: null,
 			learnLang: null,
 			commLang: [],
-			API_KEY: 'dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&'
+			commLearnLang: '',
+			API_KEY: 'dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&',
+			errorLang: false,
+			errorGroup: false,
+			groupList: [],
+			currentGroup: ''
 		}
 	},
 
 	mutations: {
 		updateNativeLang(state, nativeLang) {
-			state.commLang.forEach(element => {
-
-			});
-			console.log();
 			state.nativeLang = nativeLang;
 		},
 
@@ -155,8 +158,30 @@ export const lang = {
 		},
 		setCommLang(state, commLang) {
 			state.commLang = commLang;
+		},
+		updateCommLearnLang(state, commLearnLang) {
+			state.commLearnLang = commLearnLang
+		},
+		updateErrorLang(state, errorLang) {
+			state.errorLang = errorLang
+		},
+		updateErrorGroup(state, errorGroup) {
+			state.errorGroup = errorGroup
+		},
+		updateGroupList(state, groupList) {
+			state.groupList = groupList
+		},
+		addGroup(state, group) {
+			state.groupList[group] = ['']
+		},
+		removeGroup(state, group) {
+			delete state.groupList[group]
+		},
+		updateCurrentGroup(state, currentGroup) {
+			state.currentGroup = currentGroup;
 		}
 	},
+
 
 	getters: {
 		allLang: (state) => state.languages,
@@ -169,7 +194,93 @@ export const lang = {
 			}).catch(error => {
 				console.log(error);
 			})
+		},
+		setUserLearnLangs({ commit, state }, userID) {
+			if (state.nativeLang != null && state.learnLang != null) {
+				set(ref(database, `user/${userID}/learnLangs`), `${state.learnLang.code}-${state.nativeLang.code}`);
+				commit('user/updateIsUser', true, { root: true })
+			} else {
+				commit('updateErrorLang', true)
+			}
+		},
+
+		checkLearnLangs({ commit, state }, userID) {
+
+			const langRef = ref(database, `user/${userID}/learnLangs`);
+			if (userID != undefined) {
+				return onValue(langRef, (snapshot) => {
+					commit('updateCommLearnLang', snapshot.val())
+
+					if (state.commLearnLang) {
+						commit('user/updateIsUser', true, { root: true })
+						return
+					}
+					commit('user/updateIsRegistered', true, { root: true })
+					commit('user/updateAuthStage', 2, { root: true })
+
+					return false
+				});
+			} else if (userID === undefined) {
+				commit('user/updateIsUser', false, { root: true })
+			} else {
+				commit('user/updateIsRegistered', true, { root: true })
+				commit('user/updateAuthStage', 2, { root: true })
+			}
+		},
+
+		checkWordInDictionary({ commit, state }, word) {
+			axios.get('https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&', {
+				params: {
+					lang: state.commLearnLang,
+					text: word
+				}
+			}).then((response) => {
+				if (response.data.def.length > 0) {
+					commit('updateErrorLang', false)
+				} else {
+					commit('updateErrorLang', true)
+				}
+				console.log(response.data);
+			})
+		},
+		checkGroupList({ commit }, userID) {
+			const listRef = ref(database, `user/${userID}/groups`);
+
+			onValue(listRef, (snapshot) => {
+				commit('updateGroupList', snapshot.val())
+			})
+		},
+
+		deleteGroupInList({ commit, state }, info) {
+			const listRef = ref(database, `user/${info.userID}/groups`);
+			commit('removeGroup', info.groupName)
+			set(listRef, state.groupList);
+		},
+
+		updateGroupWord({ commit, state }, info) {
+			const listRef = ref(database, `user/${info.userID}/groups`);
+			console.log(state.groupList);
+			set(listRef, state.groupList);
+		},
+
+		addGroupLang({ commit, state }, info) {
+			const langRef = ref(database, `user/${info.userID}/groups/${info.groupName}`)
+			onValue(langRef, (snapshot) => {
+				if (snapshot.val()?.length > 0) {
+					commit('updateErrorGroup', true)
+				} else {
+					const listRef = ref(database, `user/${info.userID}/groups`);
+					commit('addGroup', info.groupName)
+
+					set(listRef, state.groupList);
+
+					commit('updateErrorGroup', false)
+
+				}
+			})
 		}
 	},
+
+
 	namespaced: true
 }

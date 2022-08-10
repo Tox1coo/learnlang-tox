@@ -1,10 +1,11 @@
-$widthwithnav: calc(100% - 70px);
-$widthwithaoutnav: 100%;
-
-$widthnavdecs:60px;
+$widthnavdecs:100px;
 $heightnavmob:60px;
 
-$marginwithnav: 70px;
+$widthwithnav: calc(100% - $widthnavdecs);
+$widthwithaoutnav: 100%;
+
+
+$marginwithnav: $widthnavdecs;
 $marginwithaoutnav: 0;
 
 /* Colors */

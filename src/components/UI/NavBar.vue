@@ -2,16 +2,53 @@
   <nav class="nav">
     <ul class="nav__list">
       <li class="nav__link">
-        <router-link class="nav__link" to="/">Home</router-link>
+        <router-link class="nav__link" to="/profile">
+          <Profile
+            style="width: 50px; height: 50px; margin-top: 15px"
+            :width="100"
+            :height="100"
+            :photoURL="userInfo.photoURL"
+          ></Profile>
+        </router-link>
+      </li>
+      <li class="nav__link">
+        <router-link class="nav__link" to="/"
+          ><img src="https://img.icons8.com/officel/45/000000/home.png"
+        /></router-link>
+      </li>
+      <li class="nav__link">
+        <router-link class="nav__link" to="/dictionary"
+          ><img
+            src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/45/000000/external-dictionary-online-education-flaticons-lineal-color-flat-icons.png"
+        /></router-link>
       </li>
     </ul>
+    <button
+      style="padding: 0 0 5px 0; width: 45px"
+      class="btn"
+      @click="signOutUser"
+    >
+      <img src="https://img.icons8.com/dusk/45/000000/exit-sign.png" />
+    </button>
   </nav>
   <router-view />
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+
 export default {
   name: "NavBar",
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo,
+    }),
+  },
+  methods: {
+    ...mapActions({
+      signOutUser: "user/signOutUser",
+    }),
+  },
 };
 </script>
 
@@ -20,6 +57,10 @@ export default {
   width: $widthnavdecs;
   height: 100%;
   background: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   border: 1px solid #ccc;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -33,6 +74,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 50px;
+    list-style: none;
   }
 }
 </style>

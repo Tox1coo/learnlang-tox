@@ -19,5 +19,10 @@ export const messages = [
 		key: 'auth/email-already-in-use',
 		text: 'This email already in use',
 		type: 'email'
+	},
+	{
+		key: 'auth/user-not-found',
+		text: 'This user not found',
+		type: 'email'
 	}
 ]

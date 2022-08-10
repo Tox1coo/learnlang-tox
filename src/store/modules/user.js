@@ -1,5 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { app, storage } from '@/store/config'
+import * as db from "firebase/database";
+
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
 const auth = getAuth(app);
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
@@ -10,7 +12,8 @@ export const user = {
 			userInfo: {},
 			error: false,
 			errorMessage: '',
-			authStage: 1
+			authStage: 1,
+			isRegistered: false
 		}
 	},
 	mutations: {
@@ -28,11 +31,14 @@ export const user = {
 		},
 		updateAuthStage(state, authStage) {
 			state.authStage = authStage
+		},
+		updateIsRegistered(state, isRegistered) {
+			state.isRegistered = isRegistered
 		}
 	},
 
 	actions: {
-		signInUser({ commit, state }, user) {
+		signInUser({ commit, state, dispatch }, user) {
 			const userInfo = new Promise((resolve, reject) => {
 				signInWithEmailAndPassword(auth, user.email, user.password).then((userCredintial) => {
 					resolve(userCredintial.user)
@@ -40,9 +46,9 @@ export const user = {
 					reject(error)
 				})
 			})
-			userInfo.then(response => {
-				commit('updateIsUser', true)
+			userInfo.then(async response => {
 				commit('updateUserInfo', response)
+				dispatch('lang/checkLearnLangs', response.uid, { root: true })
 			}).catch(error => {
 				commit('updateError', true)
 				commit('updateErrorMessage', error.code)
@@ -54,17 +60,23 @@ export const user = {
 					resolve(userCredintial.user)
 				}).catch(error => {
 					commit('updateError', true)
-
 					commit('updateErrorMessage', error.code)
 				})
 			})
 			userInfo.then(response => {
 				const userState = response
 				dispatch('getUpload', { user, userState })
+				dispatch('setParamsUser', userState.uid)
 			})
 		},
-		async getUpload({ commit }, user) {
 
+		setParamsUser({ commit }, userID) {
+			const database = db.getDatabase(app);
+			const newRef = db.ref(database, `user/${userID}/groups`);
+			db.set(newRef, ['']);
+		},
+
+		async getUpload({ commit }, user) {
 			const refStorage = ref(storage, user.userState.uid + '.jpg');
 
 			const snapshot = await uploadBytes(refStorage, user.user.profilePhoto)
@@ -83,7 +95,7 @@ export const user = {
 			}
 
 		},
-		onAuthUser({ commit, state }) {
+		async onAuthUser({ commit, state }) {
 			const user = new Promise((resolve, reject) => {
 				onAuthStateChanged(auth, (user) => {
 					if (user) {
@@ -97,7 +109,6 @@ export const user = {
 			user.then((response) => {
 				const currentUser = getAuth().currentUser
 				if (currentUser) {
-					commit('updateIsUser', true)
 					commit('updateUserInfo', currentUser)
 
 				}
@@ -108,6 +119,8 @@ export const user = {
 
 			signOut(auth).then(() => {
 				commit('updateIsUser', false)
+				commit('updateIsRegistered', false)
+				commit('updateAuthStage', 1)
 				commit('updateUserInfo', {})
 			}).catch((error) => {
 				// An error happened.

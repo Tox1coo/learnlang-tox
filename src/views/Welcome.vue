@@ -1,6 +1,6 @@
 <template>
   <div class="welcome">
-    <div v-if="!isRegister" class="welcome__login">
+    <div v-if="!isRegistered" class="welcome__login">
       <h1 class="title">Welcome!</h1>
       <h2 class="subtitle">let's start learning languages :)</h2>
       <Login></Login>
@@ -8,20 +8,22 @@
         Not a member?
         <a
           @click="
-            (isRegister = true), updateError(false), updateErrorMessage('')
+            updateIsRegistered(true), updateError(false), updateErrorMessage('')
           "
           >Sign up now</a
         >
       </div>
     </div>
-    <div v-else-if="isRegister && authStage === 1" class="welcome__register">
+    <div v-else-if="isRegistered && authStage === 1" class="welcome__register">
       <h1 class="title">Register Account</h1>
       <Register></Register>
       <div class="create">
         Do you have account?
         <a
           @click="
-            (isRegister = false), updateError(false), updateErrorMessage('')
+            updateIsRegistered(false),
+              updateError(false),
+              updateErrorMessage('')
           "
           >Sign in now</a
         >
@@ -50,7 +52,7 @@ export default {
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
-
+      isRegistered: (state) => state.user.isRegistered,
       authStage: (state) => state.user.authStage,
     }),
   },
@@ -58,6 +60,7 @@ export default {
     ...mapMutations({
       updateError: "user/updateError",
       updateErrorMessage: "user/updateErrorMessage",
+      updateIsRegistered: "user/updateIsRegistered",
     }),
   },
 };
