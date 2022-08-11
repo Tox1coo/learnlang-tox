@@ -32,7 +32,7 @@ export default {
       transform: translate(-50%, -50%);
       animation: loading-first 3s cubic-bezier(0.14, 0.47, 0.2, 1.15) infinite;
       border-radius: 50%;
-      border: 1px solid rgba(#0000ff, 0.5);
+      border: 1px solid rgba($background-accent, 0.5);
     }
     &::after {
       position: absolute;
@@ -42,7 +42,7 @@ export default {
       transform: translate(-50%, -50%);
       animation: loading-last 1.5s cubic-bezier(0.14, 0.47, 0.2, 1.15) infinite;
       border-radius: 50%;
-      border: 1px solid rgba(#0000ff, 0.5);
+      border: 1px solid rgba($background-accent, 0.5);
     }
   }
 }

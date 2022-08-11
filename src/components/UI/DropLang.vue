@@ -2,7 +2,7 @@
   <div class="drop">
     <div class="drop__inner">
       <div v-for="dropItem in dropList" :key="dropItem" class="drop__item">
-        {{ dropItem }}
+        {{ dropItem.en.def[0].text }}
         <div @click="$emit('removeWord', dropItem)" class="remove">
           <div class="remove__item"></div>
         </div>
@@ -50,16 +50,17 @@ export default {
 
 <style scoped lang="scss">
 .drop {
+  z-index: 1000;
   position: absolute;
   width: 100%;
   min-height: 100px;
   height: fit-content;
-  border: 1px solid #ccc;
+  border: 1px solid #cbcfd2;
   border-radius: 10px;
   padding: 10px;
-  background-color: rgba(#ccc, 0.6);
-  backdrop-filter: blur(5px);
+  background-color: transparent;
   &__inner {
+    z-index: 1000;
     display: flex;
     gap: 15px;
     flex-wrap: wrap;

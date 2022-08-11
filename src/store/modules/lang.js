@@ -144,7 +144,8 @@ export const lang = {
 			errorLang: false,
 			errorGroup: false,
 			groupList: [],
-			currentGroup: ''
+			currentGroup: '',
+			wordInGroup: ''
 		}
 	},
 
@@ -179,6 +180,10 @@ export const lang = {
 		},
 		updateCurrentGroup(state, currentGroup) {
 			state.currentGroup = currentGroup;
+		},
+		updateWord(state, word) {
+			state.wordInGroup = word;
+			state.wordInGroup.important = false
 		}
 	},
 
@@ -187,6 +192,7 @@ export const lang = {
 		allLang: (state) => state.languages,
 		allLearnLang: (state) => state.languages.filter((lang, index) => state.commLang.filter(lang => lang.startsWith(state.nativeLang?.code + '-')).find(langFind => langFind.endsWith(lang.code)) && lang.title !== state.nativeLang.title)
 	},
+
 	actions: {
 		getCommLang({ commit, state }) {
 			axios.get('https://dictionary.yandex.net/api/v1/dicservice.json/getLangs?key=' + state.API_KEY).then(response => {
@@ -205,7 +211,6 @@ export const lang = {
 		},
 
 		checkLearnLangs({ commit, state }, userID) {
-
 			const langRef = ref(database, `user/${userID}/learnLangs`);
 			if (userID != undefined) {
 				return onValue(langRef, (snapshot) => {
@@ -228,7 +233,7 @@ export const lang = {
 			}
 		},
 
-		checkWordInDictionary({ commit, state }, word) {
+		checkWordInDictionary({ commit, state, dispatch }, word) {
 			axios.get('https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&', {
 				params: {
 					lang: state.commLearnLang,
@@ -236,11 +241,31 @@ export const lang = {
 				}
 			}).then((response) => {
 				if (response.data.def.length > 0) {
+					commit('updateWord', response.data)
+					dispatch("parallelCrossing", response.data)
 					commit('updateErrorLang', false)
+					return response.def
 				} else {
 					commit('updateErrorLang', true)
 				}
-				console.log(response.data);
+			})
+		},
+		parallelCrossing({ commit, state }, word) {
+			const first = state.commLearnLang.substr(0, 2);
+			const second = state.commLearnLang.substr(3, 5);
+			axios.get('https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&', {
+				params: {
+					lang: `${second}-${first}`,
+					text: state.wordInGroup.def[0].tr[0].text
+				}
+			}).then((response) => {
+				if (response.data.def.length > 0) {
+					commit('updateWord', { [first]: state.wordInGroup, [second]: response.data })
+					commit('updateErrorLang', false)
+					return response.def
+				} else {
+					commit('updateErrorLang', true)
+				}
 			})
 		},
 		checkGroupList({ commit }, userID) {

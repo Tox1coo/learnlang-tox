@@ -35,7 +35,7 @@ export default {
               this.isLoading = true;
             }, 450);
           });
-        }, 700);
+        }, 1000);
       });
 
     /* user.then((response) => {
@@ -68,6 +68,7 @@ export default {
   background: url("assets/backdrop.jpg") center;
   background-size: cover;
   background-repeat: no-repeat;
+  overflow: hidden;
 }
 
 *,

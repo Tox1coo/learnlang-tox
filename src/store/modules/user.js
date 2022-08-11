@@ -76,6 +76,7 @@ export const user = {
 			db.set(newRef, ['']);
 		},
 
+
 		async getUpload({ commit }, user) {
 			const refStorage = ref(storage, user.userState.uid + '.jpg');
 
