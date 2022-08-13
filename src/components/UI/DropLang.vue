@@ -50,7 +50,7 @@ export default {
 
 <style scoped lang="scss">
 .drop {
-  z-index: 1000;
+  z-index: 1100;
   position: absolute;
   width: 100%;
   min-height: 100px;

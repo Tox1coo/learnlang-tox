@@ -145,7 +145,8 @@ export const lang = {
 			errorGroup: false,
 			groupList: [],
 			currentGroup: '',
-			wordInGroup: ''
+			wordInGroup: '',
+			currentWord: null
 		}
 	},
 
@@ -153,7 +154,9 @@ export const lang = {
 		updateNativeLang(state, nativeLang) {
 			state.nativeLang = nativeLang;
 		},
-
+		updateCurrentWord(state, currentWord) {
+			state.currentWord = currentWord;
+		},
 		updateLearnLang(state, learnLang) {
 			state.learnLang = learnLang;
 		},

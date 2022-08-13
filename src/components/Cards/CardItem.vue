@@ -9,10 +9,22 @@
     :style="{ transform: transformString }"
     class="card"
   >
-    {{ cardItem.def[0]?.text }}
-    {{ cardItem.def[0]?.tr[0].text }}
-    {{ cardItem.def[0]?.pos }}
-    {{ cardItem.def[0]?.ts }}
+    <div class="card__title">
+      <p>
+        {{ cardItem.def[0]?.text }}
+        [{{ cardItem.def[0]?.pos }}]
+      </p>
+      <p v-if="cardItem.def[0]?.ts != undefined">
+        [ {{ cardItem.def[0]?.ts }} ]
+      </p>
+    </div>
+    <div @dblclick="isVisible = !isVisible" class="card__translate">
+      <div v-if="isVisible" class="card__translate-word">
+        <p>Translate:</p>
+        {{ cardItem.def[0]?.tr[0].text }}
+      </div>
+      <p v-else class="card__translate-word">Do double Click</p>
+    </div>
   </div>
 </template>
 
@@ -20,6 +32,7 @@
 import interact from "interactjs";
 const ACCEPT_CARD = "cardAccepted";
 const REJECT_CARD = "cardRejected";
+import { mapMutations } from "vuex";
 export default {
   static: {
     interactMaxRotation: 15,
@@ -56,11 +69,14 @@ export default {
         x: 0,
         rotation: 0,
       },
+      isVisible: false,
     };
   },
   mounted() {
     const element = this.$refs.interactElement;
-    console.log(element);
+    if (this.isCurrent && this.cardItem != undefined) {
+      this.updateCurrentWord(this.cardItem);
+    }
     if (element != undefined) {
       interact(element).draggable({
         onstart: () => {
@@ -95,6 +111,9 @@ export default {
   },
 
   methods: {
+    ...mapMutations({
+      updateCurrentWord: "lang/updateCurrentWord",
+    }),
     hideCard() {
       setTimeout(() => {
         // this.isShowing = false;
@@ -145,21 +164,65 @@ export default {
       this.interactSetPosition({ x: 0, rotation: 0 });
     },
   },
+  watch: {
+    isCurrent(current) {
+      if (current && this.cardItem != undefined) {
+        this.updateCurrentWord(this.cardItem);
+      }
+    },
+    cardItem(card) {
+      if (this.isCurrent) {
+        this.updateCurrentWord(card);
+      }
+    },
+  },
 };
 </script>
 
 <style scoped lang="scss">
 .card {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
   position: absolute;
   width: 300px;
   height: 500px;
   background-color: $background-accent;
   color: $linearWel;
   font-weight: 700;
-  font-size: 2.2rem;
-
+  font-size: $font-size-card;
   &.isAnimating {
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  &.isCurrent {
+    z-index: 1000;
+    pointer-events: auto;
+  }
+  &__title {
+    height: 50%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #000;
+    &-word {
+    }
+  }
+  &__translate {
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    width: 100%;
+    &-word {
+      user-select: none;
+    }
   }
 }
 </style>

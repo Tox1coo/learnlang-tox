@@ -64,7 +64,12 @@
           </div>
         </div>
       </div>
-      <div class="home__inner-right"></div>
+      <div class="home__inner-right">
+        <SynonymsCard
+          v-if="currentWord != null"
+          :synonymWords="currentWord.def"
+        ></SynonymsCard>
+      </div>
     </div>
   </div>
   <Modal v-model:show="show"><AddGroupLang></AddGroupLang></Modal>
@@ -82,6 +87,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import AddGroupLang from "@/components/LangItem/AddGroupLang.vue";
 import SelectGroupLang from "@/components/LangItem/SelectGroupLang.vue";
 import CardList from "@/components/Cards/CardList.vue";
+import SynonymsCard from "@/components/SynonymsCard/SynonymsCard.vue";
 export default {
   name: "Home",
   data() {
@@ -102,6 +108,7 @@ export default {
       groupList: (state) => state.lang.groupList,
       wordInGroup: (state) => state.lang.wordInGroup,
       commLearnLang: (state) => state.lang.commLearnLang,
+      currentWord: (state) => state.lang.currentWord,
     }),
   },
   mounted() {
@@ -156,11 +163,18 @@ export default {
       console.log("handleCardRejected");
     },
 
-    removeCardFromDeck() {
-      const deleteElement = this.groupList[this.currentGroup][0];
+    removeCardFromDeck(card) {
+      const deleteElementIndex = this.groupList[this.currentGroup].findIndex(
+        (myCard) => myCard[this.activeLang] === card
+      );
+      const deleteElement = this.groupList[this.currentGroup].splice(
+        deleteElementIndex,
+        1
+      );
+      console.log(deleteElement);
       console.log(this.groupList[this.currentGroup]);
-      this.groupList[this.currentGroup].shift();
-      this.groupList[this.currentGroup].push(deleteElement);
+
+      this.groupList[this.currentGroup].push(deleteElement[0]);
     },
     removeGroup(group) {
       this.deleteGroupInList({ groupName: group, userID: this.userInfo.uid });
@@ -174,7 +188,7 @@ export default {
       this.wordArr.splice(index, 1);
     },
   },
-  components: { AddGroupLang, SelectGroupLang, CardList },
+  components: { AddGroupLang, SelectGroupLang, CardList, SynonymsCard },
 };
 </script>
 
@@ -186,6 +200,7 @@ export default {
   height: 100%;
   padding: 25px;
   &__inner {
+    display: flex;
     background: transparent;
     border-radius: 10px;
     border: 1px solid #999;
@@ -196,9 +211,13 @@ export default {
       position: relative;
       width: 300px;
     }
+    &-right {
+      width: 50%;
+    }
   }
+
   &__left {
-    width: 70%;
+    width: 50%;
     display: flex;
     gap: 15px;
     flex-direction: column;

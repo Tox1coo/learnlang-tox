@@ -2,13 +2,13 @@
   <div class="cards">
     <div class="cards__inner">
       <CardItem
-        v-for="(card, index) in cards"
+        v-for="(card, index) in listWord"
         :key="card"
         :cardItem="card[language]"
         :is-current="index === 0"
         @cardAccepted="$emit('cardAccepted')"
         @cardRejected="$emit('cardRejected')"
-        @hideCard="$emit('hideCard')"
+        @hideCard="$emit('hideCard', card[language])"
       >
       </CardItem>
     </div>
@@ -28,6 +28,11 @@ export default {
       type: String,
       required: true,
       default: "en",
+    },
+  },
+  computed: {
+    listWord() {
+      return this.cards.filter((words) => words !== "");
     },
   },
 };
