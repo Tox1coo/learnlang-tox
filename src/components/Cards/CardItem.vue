@@ -9,6 +9,9 @@
     :style="{ transform: transformString }"
     class="card"
   >
+    <div class="card__speech">
+      <VolumeButton></VolumeButton>
+    </div>
     <div class="card__title">
       <p>
         {{ cardItem.def[0]?.text }}

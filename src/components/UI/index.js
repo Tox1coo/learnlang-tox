@@ -6,7 +6,7 @@ import Loading from '@/components/UI/Loading';
 import Profile from '@/components/UI/Profile';
 import DropLang from '@/components/UI/DropLang';
 import Modal from '@/components/UI/Modal';
-
+import VolumeButton from '@/components/UI/VolumeButton';
 
 export default [
 	NavBar,
@@ -16,5 +16,6 @@ export default [
 	Loading,
 	Profile,
 	DropLang,
-	Modal
+	Modal,
+	VolumeButton
 ]

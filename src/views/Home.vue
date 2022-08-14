@@ -171,8 +171,6 @@ export default {
         deleteElementIndex,
         1
       );
-      console.log(deleteElement);
-      console.log(this.groupList[this.currentGroup]);
 
       this.groupList[this.currentGroup].push(deleteElement[0]);
     },
