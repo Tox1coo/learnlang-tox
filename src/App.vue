@@ -25,6 +25,7 @@ export default {
   async mounted() {
     // eslint-disable-next-line no-unused-vars
     this.onAuthUser()
+      .then(() => {})
       .catch((error) => {
         console.log(error);
       })

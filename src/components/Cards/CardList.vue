@@ -6,6 +6,7 @@
         :key="card"
         :cardItem="card[language]"
         :is-current="index === 0"
+        :currentLanguage="language"
         @cardAccepted="$emit('cardAccepted')"
         @cardRejected="$emit('cardRejected')"
         @hideCard="$emit('hideCard', card[language])"

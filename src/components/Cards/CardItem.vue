@@ -10,7 +10,10 @@
     class="card"
   >
     <div class="card__speech">
-      <VolumeButton></VolumeButton>
+      <VolumeButton
+        :voiceLanguage="currentLanguage"
+        :word="cardItem.def[0]?.text"
+      ></VolumeButton>
     </div>
     <div class="card__title">
       <p>
@@ -50,6 +53,10 @@ export default {
     },
     isCurrent: {
       type: Boolean,
+      required: true,
+    },
+    currentLanguage: {
+      type: String,
       required: true,
     },
   },
@@ -203,6 +210,13 @@ export default {
     z-index: 1000;
     pointer-events: auto;
   }
+  &__speech {
+    position: absolute;
+
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, 30%);
+  }
   &__title {
     height: 50%;
     width: 100%;
@@ -211,8 +225,6 @@ export default {
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid #000;
-    &-word {
-    }
   }
   &__translate {
     cursor: pointer;

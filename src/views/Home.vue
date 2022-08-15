@@ -62,6 +62,10 @@
               }}</MyButtonAuth
             >
           </div>
+          <RecordingBlock
+            v-if="isShowRecorder"
+            v-model:isShowing="isShowRecorder"
+          ></RecordingBlock>
         </div>
       </div>
       <div class="home__inner-right">
@@ -88,6 +92,7 @@ import AddGroupLang from "@/components/LangItem/AddGroupLang.vue";
 import SelectGroupLang from "@/components/LangItem/SelectGroupLang.vue";
 import CardList from "@/components/Cards/CardList.vue";
 import SynonymsCard from "@/components/SynonymsCard/SynonymsCard.vue";
+import RecordingBlock from "@/components/Recording/RecordingBlock.vue";
 export default {
   name: "Home",
   data() {
@@ -98,6 +103,7 @@ export default {
       showGroup: false,
       visibleCards: ["Test", "Vue.js", "Webpack"],
       activeLang: "",
+      isShowRecorder: true,
     };
   },
   computed: {
@@ -186,7 +192,13 @@ export default {
       this.wordArr.splice(index, 1);
     },
   },
-  components: { AddGroupLang, SelectGroupLang, CardList, SynonymsCard },
+  components: {
+    AddGroupLang,
+    SelectGroupLang,
+    CardList,
+    SynonymsCard,
+    RecordingBlock,
+  },
 };
 </script>
 

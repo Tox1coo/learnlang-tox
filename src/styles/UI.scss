@@ -52,7 +52,8 @@ html {
 	&--auth {
 		width: 300px;
 		border-radius: 5px;
-
+		position: relative;
+		z-index: 500;
 		text-transform: uppercase;
 		font-weight: 700;
 		letter-spacing: 0.2rem;
