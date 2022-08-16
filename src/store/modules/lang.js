@@ -287,7 +287,6 @@ export const lang = {
 
 		updateGroupWord({ commit, state }, info) {
 			const listRef = ref(database, `user/${info.userID}/groups`);
-			console.log(state.groupList);
 			set(listRef, state.groupList);
 		},
 

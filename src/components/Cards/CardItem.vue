@@ -24,7 +24,11 @@
         [ {{ cardItem.def[0]?.ts }} ]
       </p>
     </div>
-    <div @dblclick="isVisible = !isVisible" class="card__translate">
+    <div
+      @touchstart="touchEvent($event)"
+      @dblclick="isVisible = !isVisible"
+      class="card__translate"
+    >
       <div v-if="isVisible" class="card__translate-word">
         <p>Translate:</p>
         {{ cardItem.def[0]?.tr[0].text }}
@@ -80,6 +84,7 @@ export default {
         rotation: 0,
       },
       isVisible: false,
+      countTouchEvent: 1,
     };
   },
   mounted() {
@@ -124,6 +129,17 @@ export default {
     ...mapMutations({
       updateCurrentWord: "lang/updateCurrentWord",
     }),
+    touchEvent() {
+      if (this.countTouchEvent === 2) {
+        this.isVisible = !this.isVisible;
+        this.countTouchEvent = 1;
+      } else {
+        this.countTouchEvent++;
+        setTimeout(() => {
+          this.countTouchEvent = 1;
+        }, 500);
+      }
+    },
     hideCard() {
       setTimeout(() => {
         // this.isShowing = false;
@@ -137,7 +153,7 @@ export default {
     playCard(interaction) {
       const { interactOutOfSightXCoordinate, interactMaxRotation } =
         this.$options.static;
-
+      console.log(interaction);
       this.interactUnsetElement();
 
       switch (interaction) {

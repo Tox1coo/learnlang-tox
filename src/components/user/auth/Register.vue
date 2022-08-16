@@ -116,7 +116,6 @@ export default {
       this.updateErrorMessage("");
       const result = await this.v$.$validate();
       if (result) {
-        console.log(result);
         const user = {
           email: this.email,
           name: this.name,
@@ -126,7 +125,6 @@ export default {
         this.signUpUser(user);
         return;
       }
-      console.log(this.v$);
     },
   },
 };

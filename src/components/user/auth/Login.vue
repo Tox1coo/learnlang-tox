@@ -80,11 +80,8 @@ export default {
         console.log(error);
       } finally {
         if (this.error) {
-          console.log(messages);
           for (const key in messages) {
-            console.log(key);
             if (key === this.errorMessage) {
-              console.log(messages[key].text);
               this.errorText = messages[key].text;
               this.errorKey = messages[key].type;
             }

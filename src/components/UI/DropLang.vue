@@ -2,7 +2,7 @@
   <div class="drop">
     <div class="drop__inner">
       <div v-for="dropItem in dropList" :key="dropItem" class="drop__item">
-        {{ dropItem.en.def[0].text }}
+        {{ dropItem[dropLang].def[0].text }}
         <div @click="$emit('removeWord', dropItem)" class="remove">
           <div class="remove__item"></div>
         </div>
@@ -24,6 +24,7 @@ export default {
   name: "DropLang",
   props: {
     dropList: Array,
+    dropLang: String,
   },
   computed: {
     ...mapState({

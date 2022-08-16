@@ -12,7 +12,6 @@
               <MyInput
                 v-model="word"
                 :clear="true"
-                :width="300"
                 :error="errorLang"
                 :placeholderInput="'Write words and press Enter'"
               ></MyInput>
@@ -20,6 +19,7 @@
                 @removeWord="removeWord"
                 v-if="wordArr.length > 0"
                 v-model:dropList="wordArr"
+                :dropLang="activeLang"
               ></DropLang>
             </form>
           </div>
@@ -38,9 +38,8 @@
             >
           </div>
         </div>
-        <div class="home__left-cards">
+        <div v-if="this.currentGroup !== ''" class="home__left-cards">
           <CardList
-            v-if="this.currentGroup != ''"
             :language="activeLang"
             :cards="groupList[currentGroup]"
             @cardAccepted="handleCardAccepted"
@@ -65,7 +64,11 @@
           <RecordingBlock
             v-if="isShowRecorder"
             v-model:isShowing="isShowRecorder"
+            :currentLanguage="activeLang"
           ></RecordingBlock>
+        </div>
+        <div v-else class="home__left-empty">
+          <div class="title">Please select/create group</div>
         </div>
       </div>
       <div class="home__inner-right">
@@ -133,15 +136,12 @@ export default {
     async addWordToLearn() {
       try {
         this.checkWordInDictionary(this.word);
-
-        console.log(this.wordArr);
       } catch (error) {
         console.log(error);
       } finally {
         const index = this.groupList[this.currentGroup]?.findIndex(
           (element) => {
             if (element != "" && element != undefined) {
-              console.log(element);
               return element.en.def[0].text === this.word;
             }
           }
@@ -162,12 +162,6 @@ export default {
         }, 300);
       }
     },
-    handleCardAccepted() {
-      console.log("handleCardAccepted");
-    },
-    handleCardRejected() {
-      console.log("handleCardRejected");
-    },
 
     removeCardFromDeck(card) {
       const deleteElementIndex = this.groupList[this.currentGroup].findIndex(
@@ -181,7 +175,11 @@ export default {
       this.groupList[this.currentGroup].push(deleteElement[0]);
     },
     removeGroup(group) {
-      this.deleteGroupInList({ groupName: group, userID: this.userInfo.uid });
+      let confirm = window.confirm(
+        `Are you sure you want to delete the "${this.currentGroup}" group?`
+      );
+      if (confirm)
+        this.deleteGroupInList({ groupName: group, userID: this.userInfo.uid });
     },
     selectGroup(group) {
       this.updateCurrentGroup(group);
@@ -223,9 +221,27 @@ export default {
     }
     &-right {
       width: 50%;
+      @media (max-width: 700px) {
+        width: 100%;
+      }
+    }
+    @media (max-width: 700px) {
+      flex-direction: column;
+      height: fit-content;
+      justify-content: center;
+      margin-bottom: $heightnavmob;
     }
   }
-
+  &__left-empty {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    @media (max-width: 700px) {
+      height: 100vh;
+    }
+  }
   &__left {
     width: 50%;
     display: flex;
@@ -245,11 +261,21 @@ export default {
       align-items: flex-start;
     }
     &-cards {
-      margin-left: 150px;
       display: flex;
       flex-direction: column;
       gap: 30px;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
     }
+    @media (max-width: 700px) {
+      width: 100%;
+    }
+  }
+  @media (max-width: 795px) {
+    width: 100%;
+    margin-left: 0;
+    height: calc(100% - $heightnavmob);
   }
 }
 </style>

@@ -58,7 +58,6 @@ export default {
   methods: {
     changePhoto(event) {
       this.imageURL = URL.createObjectURL(event.target.files[0]);
-      console.log(event.target.files[0]);
       this.$emit("update:profilePhoto", event.target.files[0]);
     },
   },

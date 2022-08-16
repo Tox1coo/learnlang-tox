@@ -33,5 +33,8 @@ export default {
   background-color: rgba($background-accent, 0.7);
   border-radius: 10px;
   font-size: calc($font-size-card - 2px);
+  @media (max-width: 910px) {
+    font-size: calc($font-size-card - 4px);
+  }
 }
 </style>

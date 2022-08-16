@@ -70,6 +70,10 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
   overflow: hidden;
+  touch-action: none;
+  @media (max-width: 700px) {
+    overflow: scroll;
+  }
 }
 
 *,
@@ -82,5 +86,8 @@ export default {
 .main {
   position: relative;
   height: 100%;
+  @media (max-width: 700px) {
+    height: fit-content;
+  }
 }
 </style>

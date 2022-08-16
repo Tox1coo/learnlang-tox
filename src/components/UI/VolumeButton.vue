@@ -25,10 +25,8 @@ export default {
     },
   },
   mounted() {
-    console.log(this.speech);
     this.getVoices().then((voices) => {
       this.voices = voices;
-
       this.voice =
         voices.filter((voice) => voice.lang.includes(this.voiceLanguage))[0] ||
         null;
@@ -60,14 +58,6 @@ export default {
 
       if (this.word != "") {
         const utterThis = new SpeechSynthesisUtterance(this.word);
-        /*
-        utterThis.onend = function () {
-          console.log("SpeechSynthesisUtterance.onend");
-        };
-
-        utterThis.onerror = function () {
-          console.error("SpeechSynthesisUtterance.onerror");
-        }; */
 
         utterThis.voice = this.voice;
         utterThis.pitch = 1;

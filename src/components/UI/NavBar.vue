@@ -1,27 +1,22 @@
 <template>
   <nav class="nav">
     <ul class="nav__list">
-      <li class="nav__link">
-        <router-link class="nav__link" to="/profile">
-          <Profile
-            style="width: 50px; height: 50px; margin-top: 15px"
-            :width="100"
-            :height="100"
-            :photoURL="userInfo.photoURL"
-          ></Profile>
-        </router-link>
-      </li>
-      <li class="nav__link">
-        <router-link class="nav__link" to="/"
-          ><img src="https://img.icons8.com/officel/45/000000/home.png"
-        /></router-link>
-      </li>
-      <li class="nav__link">
-        <router-link class="nav__link" to="/dictionary"
-          ><img
-            src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/45/000000/external-dictionary-online-education-flaticons-lineal-color-flat-icons.png"
-        /></router-link>
-      </li>
+      <router-link class="nav__link" to="/profile">
+        <Profile
+          style=""
+          :width="100"
+          :height="100"
+          :photoURL="userInfo.photoURL"
+          class="nav__link-profile"
+        ></Profile>
+      </router-link>
+      <router-link class="nav__link" to="/"
+        ><img src="https://img.icons8.com/officel/45/000000/home.png"
+      /></router-link>
+      <router-link class="nav__link" to="/dictionary"
+        ><img
+          src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/45/000000/external-dictionary-online-education-flaticons-lineal-color-flat-icons.png"
+      /></router-link>
     </ul>
     <button
       style="padding: 0 0 5px 0; width: 45px"
@@ -75,6 +70,33 @@ export default {
     flex-direction: column;
     gap: 50px;
     list-style: none;
+    align-items: center;
+  }
+
+  &__link {
+    width: 50px;
+    height: 50px;
+    &-profile {
+      width: 50px;
+      height: 50px;
+      margin-top: 15px;
+    }
+  }
+
+  @media (max-width: 795px) {
+    width: $widthwithaoutnav;
+    height: $heightnavmob;
+    flex-direction: row;
+    bottom: 0;
+    padding-right: 15px;
+    padding-left: 15px;
+    &__list {
+      flex-direction: row;
+      align-items: baseline;
+    }
+    &__link-profile {
+      margin-top: 0;
+    }
   }
 }
 </style>

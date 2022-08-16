@@ -35,7 +35,6 @@ export default {
     }),
     addGroupUser() {
       if (!this.groupName.match(/\d/)) {
-        console.log(2);
         this.addGroupLang({
           groupName: this.groupName,
           userID: this.userInfo.uid,
