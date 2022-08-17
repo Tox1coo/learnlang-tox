@@ -125,6 +125,7 @@ export default {
   methods: {
     ...mapMutations({
       updateCurrentGroup: "lang/updateCurrentGroup",
+      updateWord: "lang/updateWord",
     }),
     ...mapActions({
       checkWordInDictionary: "lang/checkWordInDictionary",
@@ -137,6 +138,8 @@ export default {
       } catch (error) {
         console.log(error);
       } finally {
+        this.updateWord("");
+
         const index = this.groupList[this.currentGroup]?.findIndex(
           (element) => {
             if (element != "" && element != undefined) {
@@ -148,22 +151,23 @@ export default {
         const resultWordArr = this.wordArr?.findIndex(
           (word) => word[this.activeLang]?.def[0]?.text === this.word
         );
-        const interval = setInterval(() => {
-          if (
-            resultWordArr === -1 &&
-            this.word != "" &&
-            this.word.length > 1 &&
-            !this.errorLang &&
-            this.currentGroup != "" &&
-            index === -1 &&
-            this.wordInGroup
-          ) {
-            this.wordArr.push(this.wordInGroup);
-            this.word = "";
-            clearInterval(interval);
-          }
-          console.log(2);
-        }, 200);
+        setTimeout(() => {
+          const interval = setInterval(() => {
+            if (
+              resultWordArr === -1 &&
+              this.word != "" &&
+              this.word.length > 1 &&
+              !this.errorLang &&
+              this.currentGroup != "" &&
+              index === -1 &&
+              this.wordInGroup
+            ) {
+              this.wordArr.push(this.wordInGroup);
+              this.word = "";
+              clearInterval(interval);
+            }
+          }, 200);
+        }, 500);
       }
     },
 

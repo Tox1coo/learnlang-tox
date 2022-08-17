@@ -245,7 +245,6 @@ export const lang = {
 				}
 			}).then((response) => {
 				if (response.data.def.length > 0) {
-					commit('updateWord', response.data)
 					dispatch("parallelCrossing", response.data)
 					commit('updateErrorLang', false)
 					return response.def
@@ -260,11 +259,11 @@ export const lang = {
 			axios.get('https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&', {
 				params: {
 					lang: `${second}-${first}`,
-					text: state.wordInGroup.def[0].tr[0].text
+					text: word.def[0].tr[0].text
 				}
 			}).then((response) => {
 				if (response.data.def.length > 0) {
-					commit('updateWord', { [first]: state.wordInGroup, [second]: response.data })
+					commit('updateWord', { [first]: word, [second]: response.data })
 					commit('updateErrorLang', false)
 					return response.def
 				} else {
