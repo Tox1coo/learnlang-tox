@@ -38,6 +38,9 @@ export default {
     height: fit-content;
     cursor: default;
     display: flex;
+    @media (max-width: 510px) {
+      width: 90%;
+    }
   }
 }
 /* .close {

@@ -24,38 +24,36 @@
             </form>
           </div>
           <div class="home__left-addgroup">
-            <MyButtonAuth
-              style="width: 160px; font-size: 1rem; margin-right: 5px"
-              @click="showGroup = true"
-            >
+            <MyButtonAuth @click="showGroup = true" class="btn--selectgroup">
               select group
             </MyButtonAuth>
 
-            <MyButtonAuth
-              @click="show = true"
-              style="width: 150px; font-size: 1rem"
+            <MyButtonAuth class="btn--addgroup" @click="show = true"
               >Add Group</MyButtonAuth
             >
           </div>
         </div>
         <div v-if="this.currentGroup !== ''" class="home__left-cards">
           <CardList
+            v-if="groupList[currentGroup]?.length > 1"
             :language="activeLang"
             :cards="groupList[currentGroup]"
             @cardAccepted="handleCardAccepted"
             @cardRejected="handleCardRejected"
             @hideCard="removeCardFromDeck"
           ></CardList>
-
+          <div v-else class="home__left-empty home__left-empty--word">
+            <div class="title">Please add more word</div>
+          </div>
           <div class="home__left-btns">
             <MyButtonAuth
               @click="activeLang = commLearnLang?.substr(0, 2)"
-              style="width: 150px"
+              class="btn--lang"
               >{{ commLearnLang }}</MyButtonAuth
             >
             <MyButtonAuth
               @click="activeLang = commLearnLang?.substr(3, 5)"
-              style="width: 150px"
+              class="btn--lang"
               >{{ commLearnLang?.substr(3, 5) }}-{{
                 commLearnLang?.substr(0, 2)
               }}</MyButtonAuth
@@ -142,18 +140,24 @@ export default {
         const index = this.groupList[this.currentGroup]?.findIndex(
           (element) => {
             if (element != "" && element != undefined) {
-              return element.en.def[0].text === this.word;
+              return element[this.activeLang]?.def[0].text === this.word;
             }
           }
         );
+
+        const resultWordArr = this.wordArr?.findIndex(
+          (word) => word[this.activeLang]?.def[0]?.text === this.word
+        );
         setTimeout(() => {
           if (
-            !this.wordArr.includes(this.word) &&
+            resultWordArr === -1 &&
             this.word != "" &&
+            this.word.length > 1 &&
             !this.errorLang &&
             this.currentGroup != "" &&
             index === -1
           ) {
+            console.log(this.wordInGroup);
             this.wordArr.push(this.wordInGroup);
             this.word = "";
           } else {
@@ -213,7 +217,8 @@ export default {
     border-radius: 10px;
     border: 1px solid #999;
     backdrop-filter: blur(5px);
-    height: 100%;
+    min-height: 100%;
+    max-height: fit-content;
     padding: 5px;
     &-form {
       position: relative;
@@ -224,6 +229,11 @@ export default {
       @media (max-width: 700px) {
         width: 100%;
       }
+    }
+    @media (max-width: 900px) and (max-height: 1024px) {
+      min-height: 100%;
+      padding-bottom: $heightnavmob;
+      max-height: fit-content;
     }
     @media (max-width: 700px) {
       flex-direction: column;
@@ -238,8 +248,12 @@ export default {
     justify-content: center;
     align-items: center;
     width: 100%;
+    height: 50vh;
     @media (max-width: 700px) {
       height: 100vh;
+    }
+    &--word {
+      height: 50vh;
     }
   }
   &__left {
@@ -253,12 +267,21 @@ export default {
       display: flex;
       gap: 15px;
       align-items: center;
+      @media (max-width: 800px) {
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+      }
     }
     &-addgroup {
       display: flex;
       flex: 1 1 auto;
       gap: 5px;
       align-items: flex-start;
+      @media (max-width: 800px) {
+        align-items: center;
+        justify-content: center;
+      }
     }
     &-cards {
       display: flex;
@@ -267,6 +290,9 @@ export default {
       width: 100%;
       justify-content: center;
       align-items: center;
+      @media (max-width: 1px) {
+        gap: 15px;
+      }
     }
     @media (max-width: 700px) {
       width: 100%;

@@ -8,9 +8,7 @@
         :error="errorGroup"
         :clear="true"
       ></MyInput>
-      <MyButtonAuth style="width: 160px; font-size: 1rem; margin-left: 10px">
-        Add group
-      </MyButtonAuth>
+      <MyButtonAuth class="btn--addgroup"> Add group </MyButtonAuth>
     </form>
   </div>
 </template>
@@ -45,5 +43,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang="scss">
+.addgroup {
+  & .btn--addgroup {
+    margin-left: 5px;
+    @media (max-width: 496px) {
+      margin-top: 10px;
+    }
+  }
+}
 </style>

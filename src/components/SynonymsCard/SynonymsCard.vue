@@ -32,9 +32,16 @@ export default {
   margin-top: 60px;
   background-color: rgba($background-accent, 0.7);
   border-radius: 10px;
+  overflow-y: scroll;
   font-size: calc($font-size-card - 2px);
+  &::-webkit-scrollbar {
+    width: 0;
+  }
   @media (max-width: 910px) {
     font-size: calc($font-size-card - 4px);
+  }
+  @media (max-width: 700px) {
+    margin-top: 15px;
   }
 }
 </style>

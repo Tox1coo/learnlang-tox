@@ -1,6 +1,6 @@
 <template>
   <div class="choice__container">
-    <swiper :slidesPerGroup="2" :slidesPerView="3" :spaceBetween="5">
+    <swiper :pagination="true" :breakpoints="breakpoints">
       <swiper-slide v-for="lang in langLists" :key="lang.code">
         <div @click="updateLang(lang)" class="choice__swiper-item">
           <img class="choice__img" :src="lang.urlPhoto" :alt="lang.title" />
@@ -22,7 +22,7 @@ import "swiper/swiper.min.css";
 
 // modules styles
 import "swiper/components/navigation/navigation.min.css";
-import "swiper/components/pagination/pagination.min.css";
+import "swiper/components/pagination/pagination.scss";
 
 // import Swiper core and required modules
 import SwiperCore, { Navigation, Pagination } from "swiper";
@@ -32,7 +32,23 @@ import { mapGetters, mapMutations } from "vuex";
 SwiperCore.use([Navigation, Pagination]);
 export default {
   data() {
-    return {};
+    return {
+      breakpoints: {
+        450: {
+          slidesPerView: 3,
+          slidesPerGroup: 2,
+          spaceBetween: 5,
+        },
+        415: {
+          slidesPerView: 2,
+          slidesPerGroup: 1,
+        },
+        320: {
+          slidesPerView: 2,
+          slidesPerGroup: 1,
+        },
+      },
+    };
   },
   props: {
     langLists: {
@@ -52,7 +68,6 @@ export default {
     updateLang(lang) {
       if (this.type === "native") {
         this.updateNativeLang(lang);
-
       } else {
         this.updateLearnLang(lang);
       }
@@ -64,7 +79,6 @@ export default {
     }),
   },
   components: { Swiper, SwiperSlide },
-  mounted() {},
 };
 </script>
 

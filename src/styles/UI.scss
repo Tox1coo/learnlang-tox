@@ -1,6 +1,12 @@
 .title {
 	color: #000;
 	font-size: 4rem;
+	@media(max-width:385px) {
+		font-size: 3.5rem;
+	}
+	@media(max-height:385px) {
+		font-size: 3rem;
+	}
 }
 
 .subtitle {
@@ -11,6 +17,12 @@
 		font-weight: 700;
 		margin-bottom: 10px;
 		margin-top: 10px;
+		@media(max-width:385px) {
+			font-size: 2rem;
+		}
+		@media(max-height:385px) {
+			font-size: 1.8rem;
+		}
 	}
 }
 
@@ -28,7 +40,9 @@ html {
 		animation: shack 1s ease;
 		animation-iteration-count: 3;
 		animation-duration: 0.1s;
-
+	}
+	@media (max-width: 379px) {
+		width: 245px;
 	}
 }
 @keyframes shack {
@@ -67,6 +81,36 @@ html {
 		text-transform: none;
 		&:hover {
 			border-radius: 5px
+		}
+		@media (max-width: 1042px) {
+		top: 100%;
+		right: 0;
+		left: 50%;
+
+		transform: translate(-50%, 180%)
+
+		}
+	}
+	&--selectgroup{
+		width: 160px;
+		font-size: 1rem;
+		margin-right: 5px;
+		@media (max-width:379px) {
+			width: 110px;
+		}
+	}
+	&--addgroup {
+		width: 150px;
+		font-size: 1rem;
+		@media (max-width:379px) {
+			width: 110px;
+		}
+	}
+
+	&--lang {
+		width: 150px;
+		@media (max-width: 379px) {
+			width: 120px;
 		}
 	}
 

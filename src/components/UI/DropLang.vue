@@ -71,6 +71,14 @@ export default {
     font-size: 1.5rem;
     position: relative;
   }
+  @media (max-width: 1042px) {
+    background-color: rgba(#ccc, 0.98);
+  }
+  @media (max-width: 360px) {
+    width: 80%;
+    left: 50%;
+    transform: translate(-50%);
+  }
 }
 
 .remove {

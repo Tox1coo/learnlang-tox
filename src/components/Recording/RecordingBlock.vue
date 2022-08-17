@@ -14,7 +14,12 @@
     >
       <img :src="micURL" />
     </div>
-    <!-- <audio src="URL"></audio> -->
+    <audio ref="audioCorrect">
+      <source :src="require(`@/assets/correct.mp3`)" :type="typeAudio" />
+    </audio>
+    <audio ref="audioFail">
+      <source :src="require(`@/assets/fail.wav`)" :type="typeAudio" />
+    </audio>
   </div>
 </template>
 
@@ -53,6 +58,8 @@ export default {
       isActive: false,
       recordingWord: "",
       isCurrent: null,
+      audioURL: "",
+      typeAudio: "",
     };
   },
 
@@ -69,10 +76,17 @@ export default {
           const result = evt.results;
           if (
             result[0][0].transcript.toLocaleLowerCase() ===
-            this.currentWord.def[0].text
+            this.currentWord.def[0].text.toLocaleLowerCase()
           ) {
+            this.audioURL = "correct.mp3";
+            this.typeAudio = "audio/mpeg";
             this.isCurrent = true;
+            this.$refs.audioCorrect.play();
           } else {
+            this.audioURL = "fail.wav";
+            this.typeAudio = "audio/wav";
+            this.$refs.audioFail.play();
+
             this.isCurrent = false;
           }
           this.recordingWord = result[0][0].transcript.toLocaleLowerCase();
@@ -111,9 +125,9 @@ export default {
 
 <style scoped lang="scss">
 .recording {
-  width: 80%;
+  width: 90%;
   background-color: $background-accent;
-  height: 100px;
+  height: 90px;
   border-radius: 10px;
   display: flex;
   justify-content: center;

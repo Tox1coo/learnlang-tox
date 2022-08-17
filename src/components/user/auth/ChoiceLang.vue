@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from "vuex";
+import { mapState, mapGetters, mapActions, mapMutations } from "vuex";
 import SwiperLang from "@/components/UI/SwiperLang.vue";
 import LangItem from "@/components/LangItem/LangItem.vue";
 import Profile from "../../UI/Profile.vue";
@@ -57,6 +57,10 @@ export default {
     }),
   },
   methods: {
+    ...mapMutations({
+      updateNativeLang: "lang/updateNativeLang",
+      updateLearnLang: "lang/updateLearnLang",
+    }),
     ...mapActions({
       getCommLang: "lang/getCommLang",
       setUserLearnLangs: "lang/setUserLearnLangs",
@@ -65,6 +69,10 @@ export default {
   components: { SwiperLang, LangItem, Profile },
   mounted() {
     this.getCommLang();
+    setTimeout(() => {
+      this.updateNativeLang("");
+      this.updateLearnLang("");
+    }, 1000);
   },
 };
 </script>
@@ -79,10 +87,17 @@ export default {
   }
   &__container {
     width: 400px;
+    @media (max-width: 385px) {
+      width: 300px;
+    }
   }
   &__img {
     width: 75px;
     height: 50px;
+    @media (max-height: 385px) {
+      width: 50px;
+      height: 35px;
+    }
   }
   &__swiper {
     &-item {
@@ -103,6 +118,9 @@ export default {
       &:hover {
         background-color: rgba(#fff, 0.5);
       }
+      @media (max-height: 385px) {
+        height: 80px;
+      }
     }
   }
   &__learn {
@@ -111,9 +129,6 @@ export default {
     justify-content: center;
     align-items: center;
     gap: 15px;
-    margin-bottom: 15px;
-  }
-  &__native {
     margin-bottom: 15px;
   }
 }
@@ -125,6 +140,10 @@ export default {
   height: 100px;
   backdrop-filter: blur(5px);
   overflow: hidden;
+  @media (max-height: 385px) {
+    width: 60px;
+    height: 60px;
+  }
   img {
     position: absolute;
     top: 50%;

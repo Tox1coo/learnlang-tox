@@ -147,6 +147,7 @@ export default {
         this.interactPosition.rotation = 0;
 
         this.$emit("hideCard", this.card);
+        this.isVisible = false;
       }, 300);
     },
 
@@ -254,6 +255,9 @@ export default {
     &-word {
       user-select: none;
     }
+  }
+  @media (max-width: 379px) {
+    width: 250px;
   }
 }
 </style>

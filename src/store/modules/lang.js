@@ -138,7 +138,7 @@ export const lang = {
 			],
 			nativeLang: null,
 			learnLang: null,
-			commLang: [],
+			commLang: null,
 			commLearnLang: '',
 			API_KEY: 'dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&',
 			errorLang: false,
@@ -186,10 +186,11 @@ export const lang = {
 		},
 		updateWord(state, word) {
 			state.wordInGroup = word;
-			state.wordInGroup.important = false
+			if (state.wordInGroup) {
+				state.wordInGroup.important = false
+			}
 		}
 	},
-
 
 	getters: {
 		allLang: (state) => state.languages,
@@ -302,9 +303,21 @@ export const lang = {
 					set(listRef, state.groupList);
 
 					commit('updateErrorGroup', false)
-
 				}
 			})
+		},
+		clearInfoUser({ commit }) {
+			console.log(2);
+			commit('updateErrorGroup', false);
+			commit('updateGroupList', []);
+			commit('updateWord', '');
+			commit('updateCurrentGroup', '')
+			commit('updateErrorLang', false);
+			commit('updateCommLearnLang', '');
+			commit('setCommLang', null);
+			commit('updateNativeLang', '');
+			commit('updateLearnLang', '');
+			commit('updateCurrentWord', null);
 		}
 	},
 

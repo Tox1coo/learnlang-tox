@@ -24,7 +24,7 @@ export default {
   },
   async mounted() {
     // eslint-disable-next-line no-unused-vars
-    this.onAuthUser()
+    await this.onAuthUser()
       .then(() => {})
       .catch((error) => {
         console.log(error);
@@ -36,7 +36,7 @@ export default {
               this.isLoading = true;
             }, 450);
           });
-        }, 1000);
+        }, 1500);
       });
 
     /* user.then((response) => {
@@ -72,7 +72,8 @@ export default {
   overflow: hidden;
   touch-action: none;
   @media (max-width: 700px) {
-    overflow: scroll;
+    overflow-y: scroll;
+    overflow-x: hidden;
   }
 }
 
@@ -86,8 +87,10 @@ export default {
 .main {
   position: relative;
   height: 100%;
+  overflow-x: hidden;
   @media (max-width: 700px) {
     height: fit-content;
   }
+  overflow-y: scroll;
 }
 </style>

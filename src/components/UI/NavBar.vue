@@ -71,6 +71,12 @@ export default {
     gap: 50px;
     list-style: none;
     align-items: center;
+    @media (max-width: 379px), (max-height: 379px) {
+      gap: 35px;
+    }
+    @media (max-width: 330px) {
+      gap: 20px;
+    }
   }
 
   &__link {

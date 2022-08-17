@@ -96,6 +96,11 @@ export const user = {
 			}
 
 		},
+		clearInfo({ commit, dispatch }) {
+			commit('updateError', false);
+			commit('updateErrorMessage', '');
+			dispatch('lang/clearInfoUser', null, { root: true })
+		},
 		async onAuthUser({ commit, state }) {
 			const user = new Promise((resolve, reject) => {
 				onAuthStateChanged(auth, (user) => {
@@ -115,7 +120,7 @@ export const user = {
 				}
 			})
 		},
-		signOutUser({ commit }) {
+		signOutUser({ commit, dispatch }) {
 			const auth = getAuth(app);
 
 			signOut(auth).then(() => {
@@ -123,6 +128,7 @@ export const user = {
 				commit('updateIsRegistered', false)
 				commit('updateAuthStage', 1)
 				commit('updateUserInfo', {})
+				dispatch('clearInfo')
 			}).catch((error) => {
 				// An error happened.
 			})

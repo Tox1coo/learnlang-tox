@@ -43,6 +43,11 @@ export default {
 .cards {
   position: relative;
   width: 300px;
+  touch-action: none;
+
   height: 500px;
+  @media (max-width: 379px) {
+    width: 250px;
+  }
 }
 </style>
