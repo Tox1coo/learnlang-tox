@@ -39,8 +39,8 @@ export default {
     }),
     updatingGroupWord() {
       this.groupList[this.currentGroup] = [
-        ...this.groupList[this.currentGroup],
         ...this.dropList,
+        ...this.groupList[this.currentGroup],
       ];
       this.$emit("update:dropList", []);
       this.updateGroupWord({ userID: this.userInfo.uid });

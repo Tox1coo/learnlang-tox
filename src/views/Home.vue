@@ -1,12 +1,12 @@
 <template>
-  <div class="home">
-    <div class="home__inner">
-      <div class="home__inner-left home__left">
-        <div class="home__left-top">
-          <div class="home__left-input">
+  <div class="block">
+    <div class="block__inner">
+      <div class="block__inner-left block__left">
+        <div class="block__left-top">
+          <div class="block__left-input">
             <form
               @submit.prevent="addWordToLearn"
-              class="home__inner-form"
+              class="block__inner-form"
               action=""
             >
               <MyInput
@@ -23,7 +23,7 @@
               ></DropLang>
             </form>
           </div>
-          <div class="home__left-addgroup">
+          <div class="block__left-addgroup">
             <MyButtonAuth @click="showGroup = true" class="btn--selectgroup">
               select group
             </MyButtonAuth>
@@ -33,7 +33,7 @@
             >
           </div>
         </div>
-        <div v-if="this.currentGroup !== ''" class="home__left-cards">
+        <div v-if="this.currentGroup !== ''" class="block__left-cards">
           <CardList
             v-if="groupList[currentGroup]?.length > 1"
             :language="activeLang"
@@ -42,10 +42,10 @@
             @cardRejected="handleCardRejected"
             @hideCard="removeCardFromDeck"
           ></CardList>
-          <div v-else class="home__left-empty home__left-empty--word">
+          <div v-else class="block__left-empty block__left-empty--word">
             <div class="title">Please add more word</div>
           </div>
-          <div class="home__left-btns">
+          <div class="block__left-btns">
             <MyButtonAuth
               @click="activeLang = commLearnLang?.substr(0, 2)"
               class="btn--lang"
@@ -65,11 +65,11 @@
             :currentLanguage="activeLang"
           ></RecordingBlock>
         </div>
-        <div v-else class="home__left-empty">
+        <div v-else class="block__left-empty">
           <div class="title">Please select/create group</div>
         </div>
       </div>
-      <div class="home__inner-right">
+      <div class="block__inner-right">
         <SynonymsCard
           v-if="currentWord != null"
           :synonymWords="currentWord.def"
@@ -209,21 +209,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home {
-  width: $widthwithnav;
-  margin-left: calc($marginwithnav);
-  position: relative;
-  height: 100%;
-  padding: 25px;
+.block {
   &__inner {
-    display: flex;
-    background: transparent;
-    border-radius: 10px;
-    border: 1px solid #999;
-    backdrop-filter: blur(5px);
-    min-height: 100%;
-    max-height: fit-content;
-    padding: 5px;
     &-form {
       position: relative;
       width: 300px;
@@ -233,17 +220,6 @@ export default {
       @media (max-width: 700px) {
         width: 100%;
       }
-    }
-    @media (max-width: 900px) and (max-height: 1024px) {
-      min-height: 100%;
-      padding-bottom: $heightnavmob;
-      max-height: fit-content;
-    }
-    @media (max-width: 700px) {
-      flex-direction: column;
-      height: fit-content;
-      justify-content: center;
-      margin-bottom: $heightnavmob;
     }
   }
   &__left-empty {
@@ -301,11 +277,6 @@ export default {
     @media (max-width: 700px) {
       width: 100%;
     }
-  }
-  @media (max-width: 795px) {
-    width: 100%;
-    margin-left: 0;
-    height: calc(100% - $heightnavmob);
   }
 }
 </style>

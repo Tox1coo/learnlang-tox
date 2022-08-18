@@ -34,6 +34,7 @@ export default {
           await this.checkLearnLangs(this.userInfo.uid).finally(() => {
             setTimeout(() => {
               this.isLoading = true;
+              this.checkGroupList(this.userInfo.uid);
             }, 450);
           });
         }, 1500);
@@ -49,6 +50,7 @@ export default {
       signOutUser: "user/signOutUser",
       onAuthUser: "user/onAuthUser",
       checkLearnLangs: "lang/checkLearnLangs",
+      checkGroupList: "lang/checkGroupList",
     }),
     ...mapMutations({
       updateIsUser: "user/updateIsUser",

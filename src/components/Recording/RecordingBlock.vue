@@ -46,10 +46,8 @@ export default {
   computed: {
     ...mapState({
       currentWord: (state) => state.lang.currentWord,
+      groupList: (state) => state.lang.groupList,
     }),
-    getMicURL() {
-      return this.micURL;
-    },
   },
   data() {
     return {
@@ -72,25 +70,30 @@ export default {
       };
       sr.onend = () => {
         this.isRecording = false;
-        sr.onresult = (evt) => {
-          const result = evt.results;
-          if (
-            result[0][0].transcript.toLocaleLowerCase() ===
-            this.currentWord.def[0].text.toLocaleLowerCase()
-          ) {
-            this.audioURL = "correct.mp3";
-            this.typeAudio = "audio/mpeg";
-            this.isCurrent = true;
-            this.$refs.audioCorrect.play();
-          } else {
-            this.audioURL = "fail.wav";
-            this.typeAudio = "audio/wav";
-            this.$refs.audioFail.play();
-
-            this.isCurrent = false;
-          }
-          this.recordingWord = result[0][0].transcript.toLocaleLowerCase();
-        };
+      };
+      sr.onresult = (evt) => {
+        const result = evt.results;
+        if (
+          result[0][0].transcript.toLocaleLowerCase() ===
+          this.currentWord.def[0].text.toLocaleLowerCase()
+        ) {
+          this.audioURL = "correct.mp3";
+          this.typeAudio = "audio/mpeg";
+          this.isCurrent = true;
+          this.$refs.audioCorrect.play();
+          this.isActive = false;
+          this.micURL =
+            "https://img.icons8.com/ios-filled/24/000000/microphone--v1.png";
+        } else {
+          this.audioURL = "fail.wav";
+          this.typeAudio = "audio/wav";
+          this.$refs.audioFail.play();
+          this.isCurrent = false;
+          this.isActive = false;
+          this.micURL =
+            "https://img.icons8.com/ios-filled/24/000000/microphone--v1.png";
+        }
+        this.recordingWord = result[0][0].transcript.toLocaleLowerCase();
       };
     } else {
       this.$emit("update:isShowing", false);

@@ -4,8 +4,13 @@
       <img src="https://img.icons8.com/fluency/16/000000/add-image.png" />
     </div>
     <div class="profile">
-      <img :src="imageURL" alt="" />
-      <svg v-if="!imageURL" width="40" height="40" viewBox="0 0 487 487">
+      <img height="100" width="100" :src="imageURL || photoUser" alt="" />
+      <svg
+        v-if="!imageURL || !photoUser"
+        width="40"
+        height="40"
+        viewBox="0 0 487 487"
+      >
         <g>
           <g>
             <path
@@ -48,11 +53,14 @@ export default {
   name: "MyInputImage",
   data() {
     return {
-      photo: "",
       imageURL: "",
     };
   },
   props: {
+    photoUser: {
+      type: String,
+      default: "",
+    },
     profilePhoto: [Object, Array],
   },
   methods: {

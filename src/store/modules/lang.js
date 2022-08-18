@@ -253,6 +253,7 @@ export const lang = {
 				}
 			})
 		},
+
 		parallelCrossing({ commit, state }, word) {
 			const first = state.commLearnLang.substr(0, 2);
 			const second = state.commLearnLang.substr(3, 5);
@@ -306,7 +307,6 @@ export const lang = {
 			})
 		},
 		clearInfoUser({ commit }) {
-			console.log(2);
 			commit('updateErrorGroup', false);
 			commit('updateGroupList', []);
 			commit('updateWord', '');

@@ -3,9 +3,8 @@
     <ul class="nav__list">
       <router-link class="nav__link" to="/profile">
         <Profile
-          style=""
-          :width="100"
-          :height="100"
+          :width="50"
+          :height="50"
           :photoURL="userInfo.photoURL"
           class="nav__link-profile"
         ></Profile>
@@ -96,6 +95,8 @@ export default {
     bottom: 0;
     padding-right: 15px;
     padding-left: 15px;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 5px;
     &__list {
       flex-direction: row;
       align-items: baseline;
