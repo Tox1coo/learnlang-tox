@@ -117,6 +117,21 @@ export default {
       commLearnLang: (state) => state.lang.commLearnLang,
       currentWord: (state) => state.lang.currentWord,
     }),
+    getDate() {
+      let day, month, year;
+      if (new Date().getDate().toString().length > 1) {
+        day = new Date().getDate();
+      } else {
+        day = "0" + new Date().getDate() + 1;
+      }
+      if (new Date().getUTCMonth().toString().length > 1) {
+        month = new Date().getUTCMonth() + 1;
+      } else {
+        month = "0" + (new Date().getUTCMonth() + 1);
+      }
+      year = new Date().getFullYear();
+      return `${day}.${month}.${year}`;
+    },
   },
   mounted() {
     this.checkGroupList(this.userInfo.uid);
@@ -134,7 +149,12 @@ export default {
     }),
     async addWordToLearn() {
       try {
-        this.checkWordInDictionary(this.word);
+        const config = {
+          word: this.word,
+          date: this.getDate,
+          group: this.currentGroup,
+        };
+        this.checkWordInDictionary(config);
       } catch (error) {
         console.log(error);
       } finally {

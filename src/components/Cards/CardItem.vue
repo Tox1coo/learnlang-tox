@@ -188,7 +188,7 @@ export default {
       }
     },
     currentLanguage() {
-      this.isVisible = false;
+      this.isVisible = false; 
     },
   },
 };
