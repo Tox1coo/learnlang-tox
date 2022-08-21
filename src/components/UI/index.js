@@ -7,6 +7,8 @@ import Profile from '@/components/UI/Profile';
 import DropLang from '@/components/UI/DropLang';
 import Modal from '@/components/UI/Modal';
 import VolumeButton from '@/components/UI/VolumeButton';
+import MySelect from '@/components/UI/MySelect';
+
 
 export default [
 	NavBar,
@@ -17,5 +19,6 @@ export default [
 	Profile,
 	DropLang,
 	Modal,
-	VolumeButton
+	VolumeButton,
+	MySelect
 ]

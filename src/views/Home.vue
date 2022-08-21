@@ -171,23 +171,21 @@ export default {
         const resultWordArr = this.wordArr?.findIndex(
           (word) => word[this.activeLang]?.def[0]?.text === this.word
         );
-        setTimeout(() => {
-          const interval = setInterval(() => {
-            if (
-              resultWordArr === -1 &&
-              this.word != "" &&
-              this.word.length > 1 &&
-              !this.errorLang &&
-              this.currentGroup != "" &&
-              index === -1 &&
-              this.wordInGroup
-            ) {
-              this.wordArr.push(this.wordInGroup);
-              this.word = "";
-              clearInterval(interval);
-            }
-          }, 200);
-        }, 500);
+        const interval = setInterval(() => {
+          if (
+            resultWordArr === -1 &&
+            this.word != "" &&
+            this.word.length > 1 &&
+            !this.errorLang &&
+            this.currentGroup != "" &&
+            index === -1 &&
+            this.wordInGroup
+          ) {
+            this.wordArr.push(this.wordInGroup);
+            this.word = "";
+            clearInterval(interval);
+          }
+        }, 200);
       }
     },
 

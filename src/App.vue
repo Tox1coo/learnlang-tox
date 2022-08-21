@@ -37,7 +37,7 @@ export default {
               this.checkGroupList(this.userInfo.uid);
             }, 450);
           });
-        }, 1500);
+        }, 2500);
       });
 
     /* user.then((response) => {

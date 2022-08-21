@@ -12,7 +12,7 @@
       <router-link class="nav__link" to="/"
         ><img src="https://img.icons8.com/officel/45/000000/home.png"
       /></router-link>
-      <router-link class="nav__link" to="/dictionary"
+      <router-link class="nav__link" to="/mydictionary"
         ><img
           src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/45/000000/external-dictionary-online-education-flaticons-lineal-color-flat-icons.png"
       /></router-link>

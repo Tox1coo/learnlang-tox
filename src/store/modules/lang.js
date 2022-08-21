@@ -185,20 +185,30 @@ export const lang = {
 			state.currentGroup = currentGroup;
 		},
 		updateWord(state, { word, date, group }) {
-			console.log(word);
 			state.wordInGroup = word;
 			if (state.wordInGroup) {
-				state.wordInGroup.important = false
-				state.wordInGroup.date = date
-				state.wordInGroup.group = group
-				state.wordInGroup.progress = 0
+				state.wordInGroup.important = false;
+				state.wordInGroup.date = date;
+				state.wordInGroup.group = group;
+				state.wordInGroup.correct = 0;
+				state.wordInGroup.incorrect = 0;
+				state.wordInGroup.progress = 0;
 			}
 		}
 	},
 
 	getters: {
 		allLang: (state) => state.languages,
-		allLearnLang: (state) => state.languages.filter((lang, index) => state.commLang.filter(lang => lang.startsWith(state.nativeLang?.code + '-')).find(langFind => langFind.endsWith(lang.code)) && lang.title !== state.nativeLang.title)
+		allLearnLang: (state) => state.languages.filter((lang, index) => state.commLang.filter(lang => lang.startsWith(state.nativeLang?.code + '-')).find(langFind => langFind.endsWith(lang.code)) && lang.title !== state.nativeLang.title),
+		allGroupList(state) {
+			const groupList = []
+			for (const key in state.groupList) {
+				if (state.groupList[key]) {
+					groupList.push(key)
+				}
+			}
+			return groupList
+		}
 	},
 
 	actions: {
@@ -259,7 +269,6 @@ export const lang = {
 		},
 
 		parallelCrossing({ commit, state }, { word, date, group }) {
-			console.log(word, date);
 			const first = state.commLearnLang.substr(0, 2);
 			const second = state.commLearnLang.substr(3, 5);
 			axios.get('https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&', {
