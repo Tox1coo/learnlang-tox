@@ -13,7 +13,8 @@ export const user = {
 			error: false,
 			errorMessage: '',
 			authStage: 1,
-			isRegistered: false
+			isRegistered: false,
+			isLoading: false
 		}
 	},
 	mutations: {
@@ -34,6 +35,9 @@ export const user = {
 		},
 		updateIsRegistered(state, isRegistered) {
 			state.isRegistered = isRegistered
+		},
+		updateIsLoading(state, isLoading) {
+			state.isLoading = isLoading
 		}
 	},
 
@@ -101,24 +105,20 @@ export const user = {
 			commit('updateErrorMessage', '');
 			dispatch('lang/clearInfoUser', null, { root: true })
 		},
-		async onAuthUser({ commit, state }) {
+		async onAuthUser({ commit, dispatch }) {
 			const user = new Promise((resolve, reject) => {
 				onAuthStateChanged(auth, (user) => {
 					if (user) {
 						const uid = user.uid;
-						resolve(uid)
-					} else {
-						resolve(2)
+						const currentUser = getAuth().currentUser
+						commit('updateUserInfo', currentUser)
+
+						dispatch('lang/checkLearnLangs', user.uid, { root: true })
+						dispatch('lang/checkGroupList', user.uid, { root: true })
 					}
 				});
 			})
-			user.then((response) => {
-				const currentUser = getAuth().currentUser
-				if (currentUser) {
-					commit('updateUserInfo', currentUser)
 
-				}
-			})
 		},
 		signOutUser({ commit, dispatch }) {
 			const auth = getAuth(app);

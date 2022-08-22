@@ -130,7 +130,7 @@ export default {
         month = "0" + (new Date().getUTCMonth() + 1);
       }
       year = new Date().getFullYear();
-      return `${day}.${month}.${year}`;
+      return `${year}-${month}-${day}`;
     },
   },
   mounted() {

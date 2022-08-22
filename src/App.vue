@@ -10,40 +10,17 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 import Welcome from "@/views/Welcome";
 export default {
-  data() {
-    return {
-      isLoading: false,
-    };
-  },
   components: { Welcome },
   computed: {
     ...mapState({
       isUser: (state) => state.user.isUser,
       userInfo: (state) => state.user.userInfo,
+      isLoading: (state) => state.user.isLoading,
     }),
   },
   async mounted() {
     // eslint-disable-next-line no-unused-vars
-    await this.onAuthUser()
-      .then(() => {})
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(async () => {
-        setTimeout(async () => {
-          await this.checkLearnLangs(this.userInfo.uid).finally(() => {
-            setTimeout(() => {
-              this.isLoading = true;
-              this.checkGroupList(this.userInfo.uid);
-            }, 450);
-          });
-        }, 2500);
-      });
-
-    /* user.then((response) => {
-
-      console.log(response);
-    }); */
+    await this.onAuthUser();
   },
   methods: {
     ...mapActions({

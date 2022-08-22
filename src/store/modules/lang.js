@@ -233,6 +233,7 @@ export const lang = {
 			if (userID != undefined) {
 				return onValue(langRef, (snapshot) => {
 					commit('updateCommLearnLang', snapshot.val())
+					commit('user/updateIsLoading', true, { root: true })
 
 					if (state.commLearnLang) {
 						commit('user/updateIsUser', true, { root: true })
@@ -240,6 +241,8 @@ export const lang = {
 					}
 					commit('user/updateIsRegistered', true, { root: true })
 					commit('user/updateAuthStage', 2, { root: true })
+					commit('user/updateIsLoading', true, { root: true })
+
 
 					return false
 				});
@@ -249,6 +252,9 @@ export const lang = {
 				commit('user/updateIsRegistered', true, { root: true })
 				commit('user/updateAuthStage', 2, { root: true })
 			}
+			commit('user/updateIsLoading', true, { root: true })
+
+
 		},
 
 		checkWordInDictionary({ commit, state, dispatch }, { word, date, group }) {

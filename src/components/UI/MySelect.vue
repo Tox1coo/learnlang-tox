@@ -30,6 +30,13 @@ export default {
       visibleDrop: false,
     };
   },
+  mounted() {
+    window.addEventListener("click", (event) => {
+      if (!event.target.className.includes("select__btn")) {
+        this.visibleDrop = false;
+      }
+    });
+  },
   props: {
     selectDrop: {
       type: Array,
@@ -75,17 +82,18 @@ export default {
   }
   &__drop {
     width: 100%;
+    z-index: 1000;
     visibility: hidden;
     opacity: 0;
     list-style: none;
     height: fit-content;
     min-height: 50px;
-    background-color: transparent;
+    background-color: #fff;
     backdrop-filter: blur(5px);
     position: absolute;
+    padding: 0px 5px 5px 0px;
     top: 70%;
     transform: translateY(-20%);
-
     border-radius: 10px;
     border: 1px solid #999;
     display: flex;
@@ -96,6 +104,7 @@ export default {
       margin-left: 10px;
       margin-top: 4px;
       font-size: 1.4rem;
+      cursor: pointer;
     }
     transition: all 0.3s ease;
   }

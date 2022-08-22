@@ -6,15 +6,25 @@
           class="dictionary__table-column"
           v-for="tableItem in tableList"
           :key="tableItem"
+          @click="$emit('sortedDictionary', tableItem)"
         >
-          {{ tableItem }}
+          {{ tableItem.title }}
+          <div class="sort">
+            <div
+              :class="{
+                'active-top': tableItem.direction === 'top',
+                'active-down': tableItem.direction === 'down',
+              }"
+              class="sort__item"
+            ></div>
+          </div>
         </td>
       </tr>
     </thead>
     <tbody>
       <tr
-        v-for="(tableInfoItem, index) in getTableInfoList"
-        :key="tableInfoItem"
+        v-for="(tableInfoItem, index) in sortedDictionaryList"
+        :key="`${index}-${tableInfoItem.progress}-${tableInfoItem[getOriginalLang].def[0].text}`"
       >
         <td class="dictionary__table-column">
           {{ tableInfoItem[getOriginalLang].def[0].text }}
@@ -61,7 +71,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   props: {
     tableList: {
@@ -80,35 +90,15 @@ export default {
       default: () => "All groups",
     },
   },
+  emits: ["sortedDictionary"],
   computed: {
     ...mapState({
       commLearnLang: (state) => state.lang.commLearnLang,
+      dictionaryList: (state) => state.dictionary.dictionaryList,
     }),
-    getTableInfoList() {
-      let item = [];
-      if (this.nameGroup === "All groups") {
-        for (const key in this.tableInfoList) {
-          if (this.tableInfoList[key] !== "") {
-            this.tableInfoList[key]?.forEach((element) => {
-              if (element) {
-                item.push(element);
-              }
-            });
-          }
-        }
-      }
-      if (this.tableInfoList[this.nameGroup] !== undefined) {
-        if (this.tableInfoList[this.nameGroup] !== "") {
-          this.tableInfoList[this.nameGroup]?.forEach((element) => {
-            if (element) {
-              item.push(element);
-            }
-          });
-        }
-      }
-      return item;
-    },
-
+    ...mapGetters({
+      sortedDictionaryList: "dictionary/sortedDictionaryList",
+    }),
     getOriginalLang() {
       return this.commLearnLang.substr(0, 2);
     },
@@ -134,24 +124,45 @@ export default {
         const offset = setProgress();
 
         if (offset >= 0 && offset < 42) {
-          strokeColor = "#ff03df"; // от 100% до 70%
+          strokeColor = "green"; // от 100% до 70%
         } else if (offset >= 42 && offset < 70) {
-          strokeColor = "#ff9"; // от 70% до 50 %
+          strokeColor = "lightgreen"; // от 70% до 50%
         } else if (offset >= 69 && offset < 104) {
-          strokeColor = "#ff1345"; // От 50% дл 25%
-        } else if (offset >= 104 && offset < 139) {
-          strokeColor = "green"; // от 25% до 0%
+          strokeColor = "#ff9"; // От 50% д0 25%
+        } else if (offset >= 105 && offset < 139) {
+          strokeColor = "#ff1345"; // от 25% до 0%
         }
         this.$refs.circle[
           index
         ].style.cssText = `stroke-dasharray: ${circumference} ${circumference}; stroke-dashoffset: ${offset}; stroke: ${strokeColor}`;
       }, 300);
+      // проверить на правильную работу
     },
   },
 };
 </script>
 
 <style scoped lang="scss">
+%center-absolute {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+%pseudo-block {
+  content: "";
+  position: absolute;
+  height: 0;
+  width: 0;
+  border-width: 3px 3px 0 3px;
+  border-color: #9f9f9f transparent transparent transparent;
+  border-style: solid;
+  top: 70%;
+  transform: translateY(-50%);
+  right: 0px;
+  transform-origin: center;
+  pointer-events: none;
+  transition: all 0.2s ease 0s;
+}
 .dictionary__table {
   width: 100%;
   border: 1px solid #000;
@@ -161,17 +172,53 @@ export default {
   font-size: 1.5rem;
   margin-top: 15px;
   border-radius: 5px;
+  thead {
+    .dictionary__table-column {
+      cursor: pointer;
+    }
+  }
   &-column {
     padding: 15px;
     border-left: 1px solid #000;
     border-bottom: 1px solid #000;
-    margin: auto;
+    position: relative;
     &:first-child {
       border-left: none;
     }
+    .sort {
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      position: absolute;
+      width: 10px;
+      height: 20px;
+      &__item {
+        height: 100%;
+        position: relative;
+        &::after {
+          @extend %pseudo-block;
+        }
+
+        &::before {
+          @extend %pseudo-block;
+          top: 30%;
+
+          transform: rotate(-180deg);
+        }
+      }
+    }
   }
 }
-
+.active-top {
+  &::before {
+    border-color: #000 transparent transparent transparent !important;
+  }
+}
+.active-down {
+  &::after {
+    border-color: #000 transparent transparent transparent !important;
+  }
+}
 /* .progress {
   width: 65px;
   width: 65px;
