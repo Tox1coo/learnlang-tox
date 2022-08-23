@@ -7,8 +7,8 @@ export const dictionary = {
 				direction: 'top'
 			},
 			nativeLangForDictionary: '',
-			learningLangForDictionary: ''
-
+			learningLangForDictionary: '',
+			searchDictionary: ''
 		}
 	},
 	mutations: {
@@ -23,6 +23,9 @@ export const dictionary = {
 		},
 		updateSortedType(state, sortedType) {
 			state.sortedType = sortedType
+		},
+		updateSearchDictionary(state, searchDictionary) {
+			state.searchDictionary = searchDictionary
 		}
 	},
 
@@ -124,6 +127,11 @@ export const dictionary = {
 						return 0
 					}
 				}
+			})
+		},
+		searchAndSorted(state, getters) {
+			return getters.sortedDictionaryList.filter(dictionaryItem => {
+				return dictionaryItem[state.learningLangForDictionary].def[0].text.startsWith(state.searchDictionary.toLocaleLowerCase()) || dictionaryItem[state.nativeLangForDictionary].def[0].text.startsWith(state.searchDictionary.toLocaleLowerCase())
 			})
 		}
 	},

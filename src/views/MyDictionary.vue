@@ -20,6 +20,7 @@
       </div>
       <div class="dictionary__body">
         <DictionaryTable
+          @showInfoItem="showInfoItem"
           @sortedDictionary="sortedDictionary"
           :tableInfoList="groupList"
           :tableList="infoTableList"
@@ -28,15 +29,24 @@
       </div>
     </div>
   </div>
+  <DictionaryModal
+    :modalItem="activeDictionaryItem.item"
+    :nativeLang="activeDictionaryItem.nativeLang"
+    :learningLang="activeDictionaryItem.learningLang"
+    v-model:show="showDictionaryModal"
+  >
+  </DictionaryModal>
 </template>
 
 <script>
 import { mapGetters, mapState, mapMutations } from "vuex";
 import DictionaryTable from "@/components/dictionary/DictionaryTable.vue";
+import DictionaryModal from "@/components/dictionary/modal/DictionaryModal.vue";
 export default {
   data() {
     return {
       wordInDictionary: "",
+      showDictionaryModal: false,
       infoTableList: [
         {
           value: "original",
@@ -65,13 +75,17 @@ export default {
         },
       ],
       activeTableGroup: "All groups",
+      activeDictionaryItem: {
+        item: {},
+        nativeLang: "",
+        learningLang: "",
+      },
     };
   },
 
   computed: {
     ...mapGetters({
       allGroupList: "lang/allGroupList",
-      sortedDictionaryList: "dictionary/sortedDictionaryList",
     }),
     ...mapState({
       groupList: (state) => state.lang.groupList,
@@ -95,7 +109,15 @@ export default {
       updateLearningLangForDictionary:
         "dictionary/updateLearningLangForDictionary",
       updateSortedType: "dictionary/updateSortedType",
+      updateSearchDictionary: "dictionary/updateSearchDictionary",
     }),
+
+    showInfoItem(dictionaryItem, show) {
+      console.log(dictionaryItem, show);
+      this.activeDictionaryItem = dictionaryItem;
+      this.showDictionaryModal = show;
+    },
+
     sortedDictionary(value) {
       if (value.direction === null) {
         value.direction = "top";
@@ -143,25 +165,46 @@ export default {
     activeTableGroup() {
       this.getTableInfoList();
     },
+    wordInDictionary(search) {
+      this.updateSearchDictionary(search);
+    },
   },
-  components: { DictionaryTable },
+  components: { DictionaryTable, DictionaryModal },
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .dictionary {
-  display: block;
+  display: block !important;
   text-align: left;
   padding: 15px;
   &__top {
     margin-bottom: 15px;
     .title {
       margin-bottom: 15px;
+      @media (max-width: 835px) {
+        font-size: 3.2rem;
+      }
     }
   }
+
   &__filter {
     display: flex;
     gap: 15px;
+    @media (max-width: 340px) {
+      input {
+        width: 160px;
+      }
+    }
+  }
+  &__body {
+    overflow-y: scroll;
+  }
+  @media (max-width: 835px) {
+    padding: 5px;
+    .text {
+      font-size: 1.6rem;
+    }
   }
 }
 </style>

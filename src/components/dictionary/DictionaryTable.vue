@@ -22,56 +22,31 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="(tableInfoItem, index) in sortedDictionaryList"
+      <DictionaryTableRow
+        v-for="(tableInfoItem, index) in searchAndSorted"
         :key="`${index}-${tableInfoItem.progress}-${tableInfoItem[getOriginalLang].def[0].text}`"
-      >
-        <td class="dictionary__table-column">
-          {{ tableInfoItem[getOriginalLang].def[0].text }}
-        </td>
-        <td class="dictionary__table-column">
-          {{ tableInfoItem[getLearningLang].def[0].text }}
-        </td>
-        <td class="dictionary__table-column">
-          {{ tableInfoItem.group }}
-        </td>
-        <td class="dictionary__table-column">
-          {{ tableInfoItem.date }}
-        </td>
-        <td class="dictionary__table-column">
-          <div class="progress active-progress">
-            <svg width="60" height="60">
-              <circle
-                fill="transparent"
-                stroke-width="4"
-                stroke="#ccc"
-                cx="30"
-                cy="30"
-                r="22"
-              ></circle>
-              <circle
-                ref="circle"
-                fill="transparent"
-                stroke-width="4"
-                stroke="#ccc"
-                cx="30"
-                cy="30"
-                r="22"
-              ></circle>
-            </svg>
-            <div class="progress__number">
-              {{ tableInfoItem.progress }}%
-              {{ updateProgress(index, tableInfoItem.progress) }}
-            </div>
-          </div>
-        </td>
-      </tr>
+        :tableItem="tableInfoItem"
+        :originalLang="getOriginalLang"
+        :learningLang="getLearningLang"
+        @click="
+          $emit(
+            'showInfoItem',
+            {
+              item: tableInfoItem,
+              nativeLang: getOriginalLang,
+              learningLang: getLearningLang,
+            },
+            true
+          )
+        "
+      ></DictionaryTableRow>
     </tbody>
   </table>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import DictionaryTableRow from "@/components/dictionary/DictionaryTableRow.vue";
 export default {
   props: {
     tableList: {
@@ -90,7 +65,7 @@ export default {
       default: () => "All groups",
     },
   },
-  emits: ["sortedDictionary"],
+  emits: ["sortedDictionary", "showInfoItem"],
   computed: {
     ...mapState({
       commLearnLang: (state) => state.lang.commLearnLang,
@@ -98,51 +73,21 @@ export default {
     }),
     ...mapGetters({
       sortedDictionaryList: "dictionary/sortedDictionaryList",
+      searchAndSorted: "dictionary/searchAndSorted",
     }),
     getOriginalLang() {
-      return this.commLearnLang.substr(0, 2);
+      return this.commLearnLang.match(/\w+\b/)[0];
     },
     getLearningLang() {
-      return this.commLearnLang.substr(3, 4);
+      return this.commLearnLang.match(/-\b\w+/)[0].slice(1);
     },
   },
-  methods: {
-    updateProgress(index, percent) {
-      // написать тест на проверку
-      setTimeout(() => {
-        const radius = this.$refs.circle[index].r.baseVal.value;
-        const circumference = 2 * Math.PI * radius;
-        this.$refs.circle[
-          index
-        ].style.cssText = `stroke-dasharray: ${circumference} ${circumference}; stroke-dashoffset: ${circumference} `;
 
-        function setProgress() {
-          const offset = circumference - (percent / 100) * circumference;
-          return offset;
-        }
-        let strokeColor;
-        const offset = setProgress();
-
-        if (offset >= 0 && offset < 42) {
-          strokeColor = "green"; // от 100% до 70%
-        } else if (offset >= 42 && offset < 70) {
-          strokeColor = "lightgreen"; // от 70% до 50%
-        } else if (offset >= 69 && offset < 104) {
-          strokeColor = "#ff9"; // От 50% д0 25%
-        } else if (offset >= 105 && offset < 139) {
-          strokeColor = "#ff1345"; // от 25% до 0%
-        }
-        this.$refs.circle[
-          index
-        ].style.cssText = `stroke-dasharray: ${circumference} ${circumference}; stroke-dashoffset: ${offset}; stroke: ${strokeColor}`;
-      }, 300);
-      // проверить на правильную работу
-    },
-  },
+  components: { DictionaryTableRow },
 };
 </script>
 
-<style scoped lang="scss">
+<style  lang="scss">
 %center-absolute {
   top: 50%;
   left: 50%;
@@ -177,6 +122,7 @@ export default {
       cursor: pointer;
     }
   }
+
   &-column {
     padding: 15px;
     border-left: 1px solid #000;
@@ -206,7 +152,14 @@ export default {
           transform: rotate(-180deg);
         }
       }
+      @media (max-width: 835px) {
+        right: 5px;
+      }
     }
+  }
+  @media (max-width: 625px) {
+    width: fit-content;
+    font-size: 1.2rem;
   }
 }
 .active-top {
