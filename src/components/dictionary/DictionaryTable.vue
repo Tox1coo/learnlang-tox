@@ -1,25 +1,23 @@
 <template>
   <table class="dictionary__table">
     <thead>
-      <tr>
-        <td
-          class="dictionary__table-column"
-          v-for="tableItem in tableList"
-          :key="tableItem"
-          @click="$emit('sortedDictionary', tableItem)"
-        >
-          {{ tableItem.title }}
-          <div class="sort">
-            <div
-              :class="{
-                'active-top': tableItem.direction === 'top',
-                'active-down': tableItem.direction === 'down',
-              }"
-              class="sort__item"
-            ></div>
-          </div>
-        </td>
-      </tr>
+      <th
+        class="dictionary__table-column"
+        v-for="tableItem in tableList"
+        :key="tableItem"
+        @click="$emit('sortedDictionary', tableItem)"
+      >
+        {{ tableItem.title }}
+        <div class="sort">
+          <div
+            :class="{
+              'active-top': tableItem.direction === 'top',
+              'active-down': tableItem.direction === 'down',
+            }"
+            class="sort__item"
+          ></div>
+        </div>
+      </th>
     </thead>
     <tbody>
       <DictionaryTableRow
@@ -87,7 +85,7 @@ export default {
 };
 </script>
 
-<style  lang="scss">
+<style lang="scss">
 %center-absolute {
   top: 50%;
   left: 50%;
@@ -120,6 +118,7 @@ export default {
   thead {
     .dictionary__table-column {
       cursor: pointer;
+      font-size: 1.2rem;
     }
   }
 
@@ -158,8 +157,7 @@ export default {
     }
   }
   @media (max-width: 625px) {
-    width: fit-content;
-    font-size: 1.2rem;
+    width: 100%;
   }
 }
 .active-top {

@@ -43,37 +43,5 @@ export default {
     }
   }
 }
-/* .close {
-  position: absolute;
-  z-index: 100;
-  right: -30px;
-  top: -35px;
-  display: flex;
-  height: 24px;
-  width: 24px;
-  z-index: 1100;
-  cursor: pointer;
-  &::after {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 18px;
-    height: 2px;
-    background-color: #fff;
-    transform: translate(-50%, -50%) rotate(-45deg);
-  }
-  &::before {
-    content: "";
-    display: block;
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    width: 18px;
-    height: 2px;
-    background-color: #fff;
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
-} */
+/* . */
 </style>

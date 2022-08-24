@@ -108,6 +108,7 @@ export default {
 .user {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   &__info {
     width: 100%;
     display: flex;

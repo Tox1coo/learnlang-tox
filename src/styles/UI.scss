@@ -49,7 +49,7 @@ html {
 		animation-duration: 0.1s;
 	}
 	@media (max-width: 379px) {
-		width: 245px;
+		width: 230px;
 	}
 
 }
@@ -119,11 +119,20 @@ html {
 
 	&--lang {
 		width: 150px;
-		@media (max-width: 379px) {
-			width: 120px;
+		margin-right: 5px;
+		margin-bottom: 0;
+		@media (max-width: 390px) {
+			margin-right: 0;
+			margin-bottom: 5px;
 		}
 	}
-
+	&--modal {
+		position: absolute;
+		right: 0;
+		@media (max-width: 930px) {
+			right: 10px;
+		}
+	}
 }
 
 .error {
@@ -172,6 +181,5 @@ html {
 	@media (max-width: 795px) {
 		width: 100%;
 		margin-left: 0;
-		height: calc(100% - $heightnavmob);
 	}
 }

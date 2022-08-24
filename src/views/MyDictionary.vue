@@ -90,6 +90,7 @@ export default {
     ...mapState({
       groupList: (state) => state.lang.groupList,
       commLearnLang: (state) => state.lang.commLearnLang,
+      importantItem: (state) => state.dictionary.importantItem,
     }),
   },
   mounted() {
@@ -195,10 +196,20 @@ export default {
       input {
         width: 160px;
       }
+      gap: 5px;
     }
   }
   &__body {
-    overflow-y: scroll;
+    overflow-y: hidden;
+    &::-webkit-scrollbar {
+      height: 10px;
+      background-color: #ddd;
+      border-radius: 30px;
+      &-thumb {
+        border-radius: 10px;
+        background-color: #ccc;
+      }
+    }
   }
   @media (max-width: 835px) {
     padding: 5px;

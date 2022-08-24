@@ -188,7 +188,7 @@ export default {
       }
     },
     currentLanguage() {
-      this.isVisible = false; 
+      this.isVisible = false;
     },
   },
 };
@@ -202,7 +202,7 @@ export default {
   align-items: center;
   border-radius: 10px;
   position: absolute;
-  width: 300px;
+  width: 100%;
   height: 500px;
   background-color: $background-accent;
   color: $linearWel;
@@ -243,9 +243,6 @@ export default {
     &-word {
       user-select: none;
     }
-  }
-  @media (max-width: 379px) {
-    width: 250px;
   }
 }
 </style>

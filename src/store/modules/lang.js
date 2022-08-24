@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { app } from '@/store/config'
-import { getDatabase, set, ref, onValue, push } from "firebase/database";
+import { getDatabase, set, ref, onValue, } from "firebase/database";
 import { getAuth } from "firebase/auth"
 const auth = getAuth(app);
 const database = getDatabase(app)

@@ -68,8 +68,12 @@ export default {
   height: 100%;
   overflow-x: hidden;
   @media (max-width: 700px) {
-    height: fit-content;
+    height: calc(100% - $heightnavmob);
   }
   overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr class="dictionary__table-row">
     <td class="dictionary__table-column">
       {{ tableItem[originalLang].def[0].text }}
     </td>
@@ -90,5 +90,14 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.dictionary__table {
+  &-row {
+    cursor: pointer;
+    transition: background-color 0.1s ease 0s;
+    &:hover {
+      background-color: rgba(#ccc, 0.3);
+    }
+  }
+}
 </style>

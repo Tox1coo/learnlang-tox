@@ -47,7 +47,7 @@ export default {
 
   height: 500px;
   @media (max-width: 379px) {
-    width: 250px;
+    width: 230px;
   }
 }
 </style>
