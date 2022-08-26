@@ -75,11 +75,11 @@ correct answers`,
       return {
         verybad: this.modalItem[this.progress[2].type] <= 25,
         bad:
-          this.modalItem[this.progress[2].type] <= 50 &&
+          this.modalItem[this.progress[2].type] < 50 &&
           this.modalItem[this.progress[2].type] > 25,
         good:
-          this.modalItem[this.progress[2].type] <= 75 &&
-          this.modalItem[this.progress[2].type] > 50,
+          this.modalItem[this.progress[2].type] < 75 &&
+          this.modalItem[this.progress[2].type] >= 50,
         verygood:
           this.modalItem[this.progress[2].type] <= 75 &&
           this.modalItem[this.progress[2].type] > 50,
@@ -95,7 +95,7 @@ correct answers`,
     text-align: start;
     color: #fff;
     margin-bottom: 15px;
-    margin-top: 55px;
+    margin-top: 10px;
 
     @media (max-width: 560px) {
       font-size: 2.5rem;
@@ -164,7 +164,7 @@ correct answers`,
   color: #ff1345;
 }
 .bad {
-  color: #ff9;
+  color: #d2d20d;
 }
 .good {
   color: lightgreen;

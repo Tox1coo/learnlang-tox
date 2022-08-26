@@ -126,13 +126,7 @@ html {
 			margin-bottom: 5px;
 		}
 	}
-	&--modal {
-		position: absolute;
-		right: 0;
-		@media (max-width: 930px) {
-			right: 10px;
-		}
-	}
+
 }
 
 .error {

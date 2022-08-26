@@ -136,16 +136,24 @@ export default {
   mounted() {
     this.checkGroupList(this.userInfo.uid);
     this.activeLang = this.commLearnLang?.substr(0, 2);
+    this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
+    this.updateLearningLangForDictionary(
+      this.commLearnLang.match(/-\b\w+/)[0].slice(1)
+    );
   },
   methods: {
     ...mapMutations({
       updateCurrentGroup: "lang/updateCurrentGroup",
       updateWord: "lang/updateWord",
+      updateNativeLangForDictionary: "dictionary/updateNativeLangForDictionary",
+      updateLearningLangForDictionary:
+        "dictionary/updateLearningLangForDictionary",
     }),
     ...mapActions({
       checkWordInDictionary: "lang/checkWordInDictionary",
       checkGroupList: "lang/checkGroupList",
       deleteGroupInList: "lang/deleteGroupInList",
+      setProgressWord: "dictionary/setProgressWord",
     }),
     async addWordToLearn() {
       try {
@@ -214,6 +222,13 @@ export default {
     removeWord(word) {
       const index = this.wordArr.indexOf(word);
       this.wordArr.splice(index, 1);
+    },
+    handleCardAccepted(cardItem) {
+      console.log(cardItem);
+      this.setProgressWord({ dictionaryItem: cardItem, status: true });
+    },
+    handleCardRejected(cardItem) {
+      this.setProgressWord({ dictionaryItem: cardItem, status: false });
     },
   },
   components: {

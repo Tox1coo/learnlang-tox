@@ -26,9 +26,9 @@ export const lang = {
 					urlPhoto: 'https://www.worldometers.info/img/flags/be-flag.gif'
 				},
 				{
-					title: "Serbian",
+					title: "Czech",
 					code: 'cs',
-					urlPhoto: 'https://www.worldometers.info/img/flags/ri-flag.gif'
+					urlPhoto: 'https://www.worldometers.info/img/flags/ez-flag.gif'
 				},
 				{
 					title: "Bulgarian",
@@ -253,8 +253,6 @@ export const lang = {
 				commit('user/updateAuthStage', 2, { root: true })
 			}
 			commit('user/updateIsLoading', true, { root: true })
-
-
 		},
 
 		checkWordInDictionary({ commit, state, dispatch }, { word, date, group }) {
@@ -295,7 +293,7 @@ export const lang = {
 		},
 		checkGroupList({ commit }, userID) {
 			const listRef = ref(database, `user/${userID}/groups`);
-
+			// переписать на get
 			onValue(listRef, (snapshot) => {
 				commit('updateGroupList', snapshot.val())
 			})

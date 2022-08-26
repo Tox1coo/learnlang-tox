@@ -93,7 +93,7 @@ export default {
       importantItem: (state) => state.dictionary.importantItem,
     }),
   },
-  mounted() {
+  created() {
     setTimeout(() => {
       this.getTableInfoList();
 
@@ -114,7 +114,6 @@ export default {
     }),
 
     showInfoItem(dictionaryItem, show) {
-      console.log(dictionaryItem, show);
       this.activeDictionaryItem = dictionaryItem;
       this.showDictionaryModal = show;
     },
@@ -168,6 +167,21 @@ export default {
     },
     wordInDictionary(search) {
       this.updateSearchDictionary(search);
+    },
+    groupList(group) {
+      if (this.activeDictionaryItem.nativeLang != "") {
+        const index = group[this.activeDictionaryItem.item.group]?.findIndex(
+          (word) =>
+            word[this.activeDictionaryItem.nativeLang]?.def[0].text ===
+            this.activeDictionaryItem.item[this.activeDictionaryItem.nativeLang]
+              ?.def[0]?.text
+        );
+        const groupList = group[this.activeDictionaryItem.item.group];
+        if (index != -1) {
+          this.activeDictionaryItem.item = groupList[index];
+        }
+      }
+      this.getTableInfoList();
     },
   },
   components: { DictionaryTable, DictionaryModal },

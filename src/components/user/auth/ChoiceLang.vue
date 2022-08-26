@@ -1,10 +1,17 @@
 <template>
   <div class="choice">
     <div class="choice__inner">
-      <Profile :photoURL="userInfo.photoURL"></Profile>
+      <Profile
+        :width="100"
+        :height="100"
+        :photoURL="userInfo.photoURL"
+      ></Profile>
 
       <div class="choice__native">
-        <div v-if="nativeLang === null" class="choice__native-item">
+        <div
+          v-if="nativeLang === null || nativeLang === ''"
+          class="choice__native-item"
+        >
           <div class="subtitle subtitle--choice">
             Choice your native language
           </div>
@@ -13,20 +20,22 @@
         </div>
         <LangItem v-else :lang="nativeLang" :titleName="'Native'"></LangItem>
       </div>
-      <div class="choice__learn">
+      <div
+        v-if="nativeLang !== null && nativeLang !== ''"
+        class="choice__learn"
+      >
         <div
-          v-if="nativeLang != null && learnLang === null"
+          v-if="
+            (nativeLang !== '' && learnLang === '') ||
+            (nativeLang !== null && learnLang === null)
+          "
           class="choice__learn-item"
         >
           <div class="subtitle subtitle--choice">Choice learn language</div>
 
           <SwiperLang :type="'learn'" :langLists="allLearnLang"></SwiperLang>
         </div>
-        <LangItem
-          v-else-if="learnLang !== null && nativeLang !== null"
-          :lang="learnLang"
-          :titleName="'Learn'"
-        ></LangItem>
+        <LangItem v-else :lang="learnLang" :titleName="'Learn'"></LangItem>
         <span v-if="errorLang" class="error"
           >Please choice native/learn language
         </span>
@@ -84,6 +93,9 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    .btn {
+      margin-top: 10px;
+    }
   }
   &__container {
     width: 400px;

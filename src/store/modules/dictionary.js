@@ -54,6 +54,9 @@ export const dictionary = {
 			state.importantItem.item = importantItem
 			state.importantItem.nativeLang = state.nativeLangForDictionary;
 			state.learningLang = state.learningLangForDictionary
+		},
+		deleteElementImportantGroup(state, itemIndex) {
+			state.importantGroup.splice(itemIndex, 1)
 		}
 	},
 
@@ -159,14 +162,15 @@ export const dictionary = {
 		},
 		searchAndSorted(state, getters) {
 			return getters.sortedDictionaryList.filter(dictionaryItem => {
-				return dictionaryItem[state.learningLangForDictionary].def[0].text.startsWith(state.searchDictionary.toLocaleLowerCase()) || dictionaryItem[state.nativeLangForDictionary].def[0].text.startsWith(state.searchDictionary.toLocaleLowerCase())
+				return dictionaryItem[state.learningLangForDictionary]?.def[0].text.startsWith(state.searchDictionary.toLocaleLowerCase()) || dictionaryItem[state.nativeLangForDictionary]?.def[0].text.startsWith(state.searchDictionary.toLocaleLowerCase())
 			})
 		}
 	},
 
 	actions: {
-		getDictionaryItem({ commit, state }, dictionaryItem) {
+		getDictionaryItem({ commit, state }, dictionaryItem,) {
 			const userId = auth.currentUser.uid;
+			// переписать на onValue
 			return new Promise((resolve, reject) => {
 				get(child(dbRef, `user/${userId}/groups/${dictionaryItem.group}`)).then((snapshot) => {
 					if (snapshot.exists()) {
@@ -176,9 +180,6 @@ export const dictionary = {
 							if (element[state.nativeLangForDictionary]?.def[0].text == dictionaryItem[state.nativeLangForDictionary].def[0].text) {
 								commit('updateImportantItem', element)
 								resolve(element)
-
-
-								// commit('updateImportantWord', element)
 							}
 						});
 					} else {
@@ -189,13 +190,12 @@ export const dictionary = {
 				});
 			})
 		},
-		makeImportant({ commit, state, dispatch }, dictionaryItem) {
+		makeImportant({ commit, state, dispatch }, { dictionaryItem, status }) {
 			const userId = auth.currentUser.uid;
 
 			const word = dispatch('getDictionaryItem', dictionaryItem);
 			word.then((result) => {
-				console.log(result);
-				result.important = true;
+				result.important = status;
 				state.importantGroup.forEach((element, index) => {
 					if (element[state.nativeLangForDictionary]?.def[0].text == result[state.nativeLangForDictionary].def[0].text) {
 						element = result;
@@ -204,6 +204,42 @@ export const dictionary = {
 					}
 
 				})
+			})
+		},
+		removeWord({ commit, state, dispatch }, dictionaryItem) {
+			const userId = auth.currentUser.uid;
+
+			const word = dispatch('getDictionaryItem', dictionaryItem);
+			word.then((result) => {
+				console.log(result);
+				const index = state.importantGroup.findIndex(word =>
+					word[state.nativeLangForDictionary]?.def[0].text === result[state.nativeLangForDictionary].def[0].text
+				)
+				console.log(index);
+				if (index !== -1) commit('deleteElementImportantGroup', index)
+
+				set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
+
+			})
+		},
+		setProgressWord({ commit, state, dispatch }, { dictionaryItem, status }) {
+			const userId = auth.currentUser.uid;
+
+			const word = dispatch('getDictionaryItem', dictionaryItem);
+			word.then((result) => {
+				if (status) result.progress += 5;
+				else if (result.progress !== 0 && !status) result.progress -= 5;
+				else if (result.progress === 0) throw 'progress = 0'
+				state.importantGroup.forEach((element, index) => {
+					if (element[state.nativeLangForDictionary]?.def[0].text == result[state.nativeLangForDictionary].def[0].text) {
+						element = result;
+						commit('updateElementImportantGroup', { element: element, index })
+						set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
+					}
+
+				})
+			}).catch(error => {
+				console.log(error);
 			})
 		}
 	},

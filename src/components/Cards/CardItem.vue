@@ -5,6 +5,9 @@
     :class="{
       isAnimating: isInteractAnimating,
       isCurrent: isCurrent,
+      nonShadow: shadow === null,
+      trueShadow: shadow,
+      falseShadow: shadow === false,
     }"
     :style="{ transform: transformString }"
     class="card"
@@ -41,7 +44,7 @@ const REJECT_CARD = "cardRejected";
 import { mapMutations } from "vuex";
 export default {
   static: {
-    interactMaxRotation: 15,
+    interactMaxRotation: 20,
     interactOutOfSightXCoordinate: 500,
     interactXThreshold: 100,
   },
@@ -73,6 +76,7 @@ export default {
   data() {
     return {
       // isShowing: true,
+      shadow: null,
       isInteractAnimating: true,
       isInteractDragged: null,
       interactPosition: {
@@ -101,9 +105,19 @@ export default {
 
           let rotation = interactMaxRotation * (x / interactXThreshold);
 
-          if (rotation > interactMaxRotation) rotation = interactMaxRotation;
-          else if (rotation < -interactMaxRotation)
+          if (rotation > interactMaxRotation / 2 && this.shadow != true) {
+            this.shadow = true;
+          } else if (
+            rotation < -interactMaxRotation / 2 &&
+            this.shadow != false
+          ) {
+            this.shadow = false;
+          }
+          if (rotation > interactMaxRotation) {
+            rotation = interactMaxRotation;
+          } else if (rotation < -interactMaxRotation) {
             rotation = -interactMaxRotation;
+          }
 
           this.interactSetPosition({ x, rotation });
         },
@@ -113,9 +127,17 @@ export default {
           const { interactXThreshold } = this.$options.static;
           this.isInteractAnimating = true;
 
-          if (x > interactXThreshold) this.playCard(ACCEPT_CARD);
-          else if (x < -interactXThreshold) this.playCard(REJECT_CARD);
-          else this.resetCardPosition();
+          if (x > interactXThreshold) {
+            this.playCard(ACCEPT_CARD);
+            this.shadow = null;
+          } else if (x < -interactXThreshold) {
+            this.playCard(REJECT_CARD);
+            this.shadow = null;
+          } else {
+            this.resetCardPosition();
+            this.shadow = null;
+          }
+          // доделать потом систему с прогрессом
         },
       });
     }
@@ -208,6 +230,7 @@ export default {
   color: $linearWel;
   font-weight: 700;
   font-size: $font-size-card;
+  transition: box-shadow 0.25s ease 0s;
   &.isAnimating {
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
@@ -243,6 +266,19 @@ export default {
     &-word {
       user-select: none;
     }
+  }
+
+  &.nonShadow {
+    box-shadow: none;
+  }
+
+  &.trueShadow {
+    box-shadow: inset 5px 15px 25px green, 10px 10px 10px green,
+      inset 10px 10px 25px green;
+  }
+  &.falseShadow {
+    box-shadow: inset 5px 15px 25px red, 10px 10px 10px red,
+      inset 10px 10px 25px red;
   }
 }
 </style>

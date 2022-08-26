@@ -7,8 +7,8 @@
         :cardItem="card[language]"
         :is-current="index === 0"
         :currentLanguage="language"
-        @cardAccepted="$emit('cardAccepted')"
-        @cardRejected="$emit('cardRejected')"
+        @cardAccepted="$emit('cardAccepted', card)"
+        @cardRejected="$emit('cardRejected', card)"
         @hideCard="$emit('hideCard', card[language])"
       >
       </CardItem>

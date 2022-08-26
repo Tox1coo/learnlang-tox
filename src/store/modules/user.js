@@ -115,6 +115,8 @@ export const user = {
 
 						dispatch('lang/checkLearnLangs', user.uid, { root: true })
 						dispatch('lang/checkGroupList', user.uid, { root: true })
+					} else {
+						commit('updateIsLoading', true)
 					}
 				});
 			})

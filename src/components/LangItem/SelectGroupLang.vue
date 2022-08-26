@@ -1,5 +1,9 @@
 <template>
   <div class="selectgroup">
+    <h1 v-if="groupList.length === 1" class="subtitle">
+      Please add new group :)
+    </h1>
+
     <div
       v-for="(group, key) in groupList"
       :key="key"

@@ -12,18 +12,24 @@
           :textItem="'Translate:'"
         ></DictionaryModalItem>
       </div>
-      <MyButtonAuth
-        v-if="!modalItem.important"
-        class="btn--modal"
-        @click="makeImportant(modalItem)"
-        >Make it important</MyButtonAuth
-      >
-      <MyButtonAuth
-        v-else
-        class="btn--modal"
-        @click="removeImportant(modalItem)"
-        >Remove from important</MyButtonAuth
-      >
+      <div class="modal__inner-btn">
+        <MyButtonAuth class="btn--modal" @click="removeWordDictionary()"
+          >Delete a word</MyButtonAuth
+        >
+        <MyButtonAuth
+          v-if="!modalItem.important"
+          class="btn--modal"
+          @click="makeImportant({ dictionaryItem: modalItem, status: true })"
+          >Make it important</MyButtonAuth
+        >
+
+        <MyButtonAuth
+          v-else
+          class="btn--modal"
+          @click="makeImportant({ dictionaryItem: modalItem, status: false })"
+          >Remove from important</MyButtonAuth
+        >
+      </div>
 
       <div class="modal__inner-progress">
         <DictionaryModalProgress
@@ -60,7 +66,19 @@ export default {
   methods: {
     ...mapActions({
       makeImportant: "dictionary/makeImportant",
+      removeWord: "dictionary/removeWord",
     }),
+    removeWordDictionary() {
+      let confirm = window.confirm(
+        `Are you sure you want to delete the "${
+          this.modalItem[this.nativeLang].def[0].text
+        }" word?`
+      );
+      if (confirm) {
+        this.removeWord(this.modalItem);
+        this.hideDialog();
+      }
+    },
   },
 };
 </script>
@@ -101,7 +119,25 @@ export default {
       }
     }
     @media (max-width: 930px) {
-      padding: 10px;
+      padding: 3px;
+    }
+    &-btn {
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+
+      @media (max-width: 630px) {
+        .btn {
+          width: 200px;
+        }
+      }
+      @media (max-width: 430px) {
+        .btn {
+          padding: 10px 15px;
+          text-transform: none;
+          width: 150px;
+        }
+      }
     }
   }
 }
@@ -109,7 +145,7 @@ export default {
   display: flex;
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: -15px;
   height: 24px;
   width: 24px;
   z-index: 1100;
