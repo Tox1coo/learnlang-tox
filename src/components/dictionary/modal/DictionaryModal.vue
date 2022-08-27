@@ -96,7 +96,7 @@ export default {
   right: 0;
   position: fixed;
   z-index: 1000;
-  overflow-y: scroll;
+  overflow-y: auto;
   display: flex;
   cursor: pointer;
   background-color: rgba(#161616, 0.5);
@@ -145,7 +145,7 @@ export default {
   display: flex;
   position: absolute;
   right: 10px;
-  top: -15px;
+  top: 7px;
   height: 24px;
   width: 24px;
   z-index: 1100;

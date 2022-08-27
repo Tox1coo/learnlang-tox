@@ -91,6 +91,7 @@ export default {
       groupList: (state) => state.lang.groupList,
       commLearnLang: (state) => state.lang.commLearnLang,
       importantItem: (state) => state.dictionary.importantItem,
+      importantGroup: (state) => state.dictionary.importantGroup,
     }),
   },
   created() {
@@ -168,19 +169,23 @@ export default {
     wordInDictionary(search) {
       this.updateSearchDictionary(search);
     },
-    groupList(group) {
+    importantGroup(group) {
       if (this.activeDictionaryItem.nativeLang != "") {
-        const index = group[this.activeDictionaryItem.item.group]?.findIndex(
+        const index = group?.findIndex(
           (word) =>
             word[this.activeDictionaryItem.nativeLang]?.def[0].text ===
             this.activeDictionaryItem.item[this.activeDictionaryItem.nativeLang]
               ?.def[0]?.text
         );
-        const groupList = group[this.activeDictionaryItem.item.group];
+
         if (index != -1) {
-          this.activeDictionaryItem.item = groupList[index];
+          this.activeDictionaryItem.item = group[index];
         }
       }
+      this.getTableInfoList();
+    },
+    groupList() {
+      console.log(2);
       this.getTableInfoList();
     },
   },

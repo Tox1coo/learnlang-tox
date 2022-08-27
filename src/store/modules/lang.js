@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { app } from '@/store/config'
-import { getDatabase, set, ref, onValue, } from "firebase/database";
+import { getDatabase, set, ref, onValue, child, get } from "firebase/database";
 import { getAuth } from "firebase/auth"
 const auth = getAuth(app);
 const database = getDatabase(app)
@@ -292,13 +292,25 @@ export const lang = {
 			})
 		},
 		checkGroupList({ commit }, userID) {
-			const listRef = ref(database, `user/${userID}/groups`);
 			// переписать на get
-			onValue(listRef, (snapshot) => {
+			get(child(ref(database), `user/${userID}/groups`)).then((snapshot) => {
 				commit('updateGroupList', snapshot.val())
 			})
 		},
 
+		listenerGroupList({ commit }) {
+			const userID = auth.currentUser.uid;
+			const listRef = ref(database, `user/${userID}/groups`);
+			onValue(listRef, (snapshot) => {
+				if (snapshot.exists()) {
+					console.log(snapshot.val());
+					commit('updateGroupList', snapshot.val())
+				} else {
+					console.log("No data available");
+				}
+
+			})
+		},
 		deleteGroupInList({ commit, state }, info) {
 			const listRef = ref(database, `user/${info.userID}/groups`);
 			commit('removeGroup', info.groupName)

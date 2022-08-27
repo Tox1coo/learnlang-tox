@@ -50,12 +50,6 @@
               :key="speechTranslate.text"
             >
               {{ speechTranslate.text }}<span>,&ensp;</span>
-              <!--           <span
-            style="margin-right: 15px"
-            v-for="speechExample in speechTranslate.ex"
-            :key="speechExample.text"
-            >{{ speechExample.text }}
-          </span> -->
             </span>
           </div>
         </div>
@@ -121,9 +115,10 @@ export default {
 <style scoped lang="scss">
 .modal__item {
   margin: auto 0;
-  height: 550px;
+  max-height: 550px;
   width: 550px;
   font-size: 1rem;
+  margin-bottom: 15px;
   .title {
     text-align: start;
     margin-bottom: 15px;
@@ -148,6 +143,8 @@ export default {
   }
   &-example {
     background-color: #fff;
+    overflow-y: auto;
+    overflow-x: hidden;
     border-radius: 5px;
     height: 400px;
     padding: 15px;
@@ -157,6 +154,14 @@ export default {
       margin-bottom: 10px;
       @media (max-width: 560px) {
         font-size: 1.7em;
+      }
+    }
+    &::-webkit-scrollbar {
+      width: 5px;
+      background-color: #ccc;
+      border-radius: 10px;
+      &-thumb {
+        background-color: #999;
       }
     }
   }
@@ -192,6 +197,7 @@ export default {
   }
   @media (max-width: 400px) {
     min-width: 150px;
+    max-width: 150px;
   }
 }
 

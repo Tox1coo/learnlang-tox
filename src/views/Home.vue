@@ -35,9 +35,9 @@
         </div>
         <div v-if="this.currentGroup !== ''" class="block__left-cards">
           <CardList
-            v-if="groupList[currentGroup]?.length > 1"
+            v-if="groupListCard[currentGroup]?.length > 1"
             :language="activeLang"
-            :cards="groupList[currentGroup]"
+            :cards="groupListCard[currentGroup]"
             @cardAccepted="handleCardAccepted"
             @cardRejected="handleCardRejected"
             @hideCard="removeCardFromDeck"
@@ -105,6 +105,7 @@ export default {
       visibleCards: ["Test", "Vue.js", "Webpack"],
       activeLang: "",
       isShowRecorder: true,
+      groupListCard: {},
     };
   },
   computed: {
@@ -134,12 +135,21 @@ export default {
     },
   },
   mounted() {
-    this.checkGroupList(this.userInfo.uid);
-    this.activeLang = this.commLearnLang?.substr(0, 2);
-    this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
-    this.updateLearningLangForDictionary(
-      this.commLearnLang.match(/-\b\w+/)[0].slice(1)
-    );
+    try {
+      this.checkGroupList(this.userInfo.uid);
+      this.activeLang = this.commLearnLang?.substr(0, 2);
+      this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
+      this.updateLearningLangForDictionary(
+        this.commLearnLang.match(/-\b\w+/)[0].slice(1)
+      );
+      this.listenerGroupList();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTimeout(() => {
+        this.groupListCard = this.groupList;
+      }, 200);
+    }
   },
   methods: {
     ...mapMutations({
@@ -153,6 +163,7 @@ export default {
       checkWordInDictionary: "lang/checkWordInDictionary",
       checkGroupList: "lang/checkGroupList",
       deleteGroupInList: "lang/deleteGroupInList",
+      listenerGroupList: "lang/listenerGroupList",
       setProgressWord: "dictionary/setProgressWord",
     }),
     async addWordToLearn() {
@@ -198,15 +209,15 @@ export default {
     },
 
     removeCardFromDeck(card) {
-      const deleteElementIndex = this.groupList[this.currentGroup].findIndex(
-        (myCard) => myCard[this.activeLang] === card
-      );
-      const deleteElement = this.groupList[this.currentGroup].splice(
+      const deleteElementIndex = this.groupListCard[
+        this.currentGroup
+      ].findIndex((myCard) => myCard[this.activeLang] === card);
+      const deleteElement = this.groupListCard[this.currentGroup].splice(
         deleteElementIndex,
         1
       );
 
-      this.groupList[this.currentGroup].push(deleteElement[0]);
+      this.groupListCard[this.currentGroup].push(deleteElement[0]);
     },
     removeGroup(group) {
       let confirm = window.confirm(

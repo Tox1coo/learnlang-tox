@@ -104,7 +104,7 @@ export default {
           const x = this.interactPosition.x + event.dx;
 
           let rotation = interactMaxRotation * (x / interactXThreshold);
-
+          if (x < 20 && x > -20) this.shadow = null;
           if (rotation > interactMaxRotation / 2 && this.shadow != true) {
             this.shadow = true;
           } else if (
@@ -230,7 +230,7 @@ export default {
   color: $linearWel;
   font-weight: 700;
   font-size: $font-size-card;
-  transition: box-shadow 0.25s ease 0s;
+  transition: box-shadow 0.15s cubic-bezier(0.17, 0.23, 0.08, 0.94);
   &.isAnimating {
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }

@@ -78,11 +78,11 @@ correct answers`,
           this.modalItem[this.progress[2].type] < 50 &&
           this.modalItem[this.progress[2].type] > 25,
         good:
-          this.modalItem[this.progress[2].type] < 75 &&
+          this.modalItem[this.progress[2].type] < 70 &&
           this.modalItem[this.progress[2].type] >= 50,
         verygood:
-          this.modalItem[this.progress[2].type] <= 75 &&
-          this.modalItem[this.progress[2].type] > 50,
+          this.modalItem[this.progress[2].type] >= 70 &&
+          this.modalItem[this.progress[2].type] < 100,
       };
     },
   },
@@ -170,6 +170,6 @@ correct answers`,
   color: lightgreen;
 }
 .verygood {
-  color: gree;
+  color: green;
 }
 </style>

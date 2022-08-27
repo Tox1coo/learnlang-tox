@@ -171,11 +171,14 @@ export const dictionary = {
 		getDictionaryItem({ commit, state }, dictionaryItem,) {
 			const userId = auth.currentUser.uid;
 			// переписать на onValue
+			const listRef = ref(database, `user/${userId}/groups/${dictionaryItem.group}`);
+			commit('updateImportantGroup', [])
+
 			return new Promise((resolve, reject) => {
-				get(child(dbRef, `user/${userId}/groups/${dictionaryItem.group}`)).then((snapshot) => {
+				onValue(listRef, (snapshot) => {
 					if (snapshot.exists()) {
 						commit('updateImportantGroup', snapshot.val())
-
+						console.log(snapshot.val());
 						snapshot.val().forEach(element => {
 							if (element[state.nativeLangForDictionary]?.def[0].text == dictionaryItem[state.nativeLangForDictionary].def[0].text) {
 								commit('updateImportantItem', element)
@@ -185,9 +188,8 @@ export const dictionary = {
 					} else {
 						console.log("No data available");
 					}
-				}).catch((error) => {
-					console.error(error);
-				});
+
+				})
 			})
 		},
 		makeImportant({ commit, state, dispatch }, { dictionaryItem, status }) {
@@ -208,14 +210,14 @@ export const dictionary = {
 		},
 		removeWord({ commit, state, dispatch }, dictionaryItem) {
 			const userId = auth.currentUser.uid;
-
+			dispatch('lang/listenerGroupList', null, { root: true })
 			const word = dispatch('getDictionaryItem', dictionaryItem);
 			word.then((result) => {
-				console.log(result);
+
 				const index = state.importantGroup.findIndex(word =>
 					word[state.nativeLangForDictionary]?.def[0].text === result[state.nativeLangForDictionary].def[0].text
 				)
-				console.log(index);
+
 				if (index !== -1) commit('deleteElementImportantGroup', index)
 
 				set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
@@ -227,6 +229,9 @@ export const dictionary = {
 
 			const word = dispatch('getDictionaryItem', dictionaryItem);
 			word.then((result) => {
+				console.log(status);
+				console.log(dictionaryItem);
+				console.log(result);
 				if (status) result.progress += 5;
 				else if (result.progress !== 0 && !status) result.progress -= 5;
 				else if (result.progress === 0) throw 'progress = 0'
