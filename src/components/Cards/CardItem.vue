@@ -104,20 +104,15 @@ export default {
           const x = this.interactPosition.x + event.dx;
 
           let rotation = interactMaxRotation * (x / interactXThreshold);
-          if (x < 20 && x > -20) this.shadow = null;
-          if (rotation > interactMaxRotation / 2 && this.shadow != true) {
+          /*  if (x < 20 && x > -20 && this.shadow !== null) this.shadow = null;
+          if (rotation > interactMaxRotation / 2 && this.shadow !== true)
             this.shadow = true;
-          } else if (
-            rotation < -interactMaxRotation / 2 &&
-            this.shadow != false
-          ) {
-            this.shadow = false;
-          }
-          if (rotation > interactMaxRotation) {
-            rotation = interactMaxRotation;
-          } else if (rotation < -interactMaxRotation) {
+          if (rotation < -interactMaxRotation / 2 && this.shadow !== false)
+            this.shadow = false; */
+
+          if (rotation > interactMaxRotation) rotation = interactMaxRotation;
+          else if (rotation < -interactMaxRotation)
             rotation = -interactMaxRotation;
-          }
 
           this.interactSetPosition({ x, rotation });
         },

@@ -135,21 +135,16 @@ export default {
     },
   },
   mounted() {
-    try {
-      this.checkGroupList(this.userInfo.uid);
-      this.activeLang = this.commLearnLang?.substr(0, 2);
-      this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
-      this.updateLearningLangForDictionary(
-        this.commLearnLang.match(/-\b\w+/)[0].slice(1)
-      );
-      this.listenerGroupList();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setTimeout(() => {
-        this.groupListCard = this.groupList;
-      }, 200);
-    }
+    this.checkGroupList(this.userInfo.uid).then((result) => {
+      console.log(result);
+      this.groupListCard = result;
+    });
+    this.activeLang = this.commLearnLang.match(/\w+\b/)[0];
+    this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
+    this.updateLearningLangForDictionary(
+      this.commLearnLang.match(/-\b\w+/)[0].slice(1)
+    );
+    this.listenerGroupList();
   },
   methods: {
     ...mapMutations({
@@ -235,7 +230,6 @@ export default {
       this.wordArr.splice(index, 1);
     },
     handleCardAccepted(cardItem) {
-      console.log(cardItem);
       this.setProgressWord({ dictionaryItem: cardItem, status: true });
     },
     handleCardRejected(cardItem) {

@@ -273,8 +273,8 @@ export const lang = {
 		},
 
 		parallelCrossing({ commit, state }, { word, date, group }) {
-			const first = state.commLearnLang.substr(0, 2);
-			const second = state.commLearnLang.substr(3, 5);
+			const first = state.commLearnLang.match(/\w+\b/)[0];
+			const second = state.commLearnLang.match(/-\b\w+/)[0].slice(1);
 			axios.get('https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20220808T152559Z.7e0553931357e27c.d50da1092554e35c7112ba76f3b82f5378a387e4&', {
 				params: {
 					lang: `${second}-${first}`,
@@ -291,10 +291,13 @@ export const lang = {
 				}
 			})
 		},
-		checkGroupList({ commit }, userID) {
+		checkGroupList({ commit, state }, userID) {
 			// переписать на get
-			get(child(ref(database), `user/${userID}/groups`)).then((snapshot) => {
-				commit('updateGroupList', snapshot.val())
+			return new Promise((resolve) => {
+				get(child(ref(database), `user/${userID}/groups`)).then((snapshot) => {
+					commit('updateGroupList', snapshot.val())
+					resolve(state.groupList)
+				})
 			})
 		},
 
