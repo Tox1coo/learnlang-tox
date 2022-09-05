@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from "vuex";
+import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 import DictionaryTable from "@/components/dictionary/DictionaryTable.vue";
 import DictionaryModal from "@/components/dictionary/modal/DictionaryModal.vue";
 export default {
@@ -92,12 +92,13 @@ export default {
       commLearnLang: (state) => state.lang.commLearnLang,
       importantItem: (state) => state.dictionary.importantItem,
       importantGroup: (state) => state.dictionary.importantGroup,
+      userInfo: (state) => state.user.userInfo,
     }),
   },
   created() {
     setTimeout(() => {
       this.getTableInfoList();
-
+      this.checkGroupList(this.userInfo.uid);
       this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
       this.updateLearningLangForDictionary(
         this.commLearnLang.match(/-\b\w+/)[0].slice(1)
@@ -112,6 +113,10 @@ export default {
         "dictionary/updateLearningLangForDictionary",
       updateSortedType: "dictionary/updateSortedType",
       updateSearchDictionary: "dictionary/updateSearchDictionary",
+    }),
+
+    ...mapActions({
+      checkGroupList: "lang/checkGroupList",
     }),
 
     showInfoItem(dictionaryItem, show) {
@@ -185,7 +190,6 @@ export default {
       this.getTableInfoList();
     },
     groupList() {
-      console.log(2);
       this.getTableInfoList();
     },
   },

@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { app } from '@/store/config'
 import { getDatabase, set, ref, onValue, child, get } from "firebase/database";
-import { getAuth } from "firebase/auth"
-const auth = getAuth(app);
 const database = getDatabase(app)
 
 import axios from 'axios'
@@ -301,12 +299,12 @@ export const lang = {
 			})
 		},
 
-		listenerGroupList({ commit }) {
-			const userID = auth.currentUser.uid;
+		listenerGroupList({ commit }, userID) {
 			const listRef = ref(database, `user/${userID}/groups`);
 			onValue(listRef, (snapshot) => {
 				if (snapshot.exists()) {
 					console.log(snapshot.val());
+
 					commit('updateGroupList', snapshot.val())
 				} else {
 					console.log("No data available");
@@ -317,6 +315,9 @@ export const lang = {
 		deleteGroupInList({ commit, state }, info) {
 			const listRef = ref(database, `user/${info.userID}/groups`);
 			commit('removeGroup', info.groupName)
+			if (info.groupName === state.currentGroup) {
+				commit('updateCurrentGroup', '')
+			}
 			set(listRef, state.groupList);
 		},
 
@@ -326,8 +327,8 @@ export const lang = {
 		},
 
 		addGroupLang({ commit, state }, info) {
-			const langRef = ref(database, `user/${info.userID}/groups/${info.groupName}`)
-			onValue(langRef, (snapshot) => {
+			// const langRef = ref(database, `user/${info.userID}/groups/${info.groupName}`)
+			get(child(ref(database), `user/${info.userID}/groups/${info.groupName}`)).then((snapshot) => {
 				if (snapshot.val()?.length > 0) {
 					commit('updateErrorGroup', true)
 				} else {
@@ -353,7 +354,5 @@ export const lang = {
 			commit('updateCurrentWord', null);
 		}
 	},
-
-
 	namespaced: true
 }

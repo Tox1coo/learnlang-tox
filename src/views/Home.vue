@@ -136,15 +136,14 @@ export default {
   },
   mounted() {
     this.checkGroupList(this.userInfo.uid).then((result) => {
-      console.log(result);
-      this.groupListCard = result;
+      this.groupListCard = result || [];
     });
     this.activeLang = this.commLearnLang.match(/\w+\b/)[0];
     this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
     this.updateLearningLangForDictionary(
       this.commLearnLang.match(/-\b\w+/)[0].slice(1)
     );
-    this.listenerGroupList();
+    this.listenerGroupList(this.userInfo.uid);
   },
   methods: {
     ...mapMutations({
@@ -216,7 +215,7 @@ export default {
     },
     removeGroup(group) {
       let confirm = window.confirm(
-        `Are you sure you want to delete the "${this.currentGroup}" group?`
+        `Are you sure you want to delete the "${group}" group?`
       );
       if (confirm)
         this.deleteGroupInList({ groupName: group, userID: this.userInfo.uid });
@@ -230,9 +229,12 @@ export default {
       this.wordArr.splice(index, 1);
     },
     handleCardAccepted(cardItem) {
+      console.log("true");
       this.setProgressWord({ dictionaryItem: cardItem, status: true });
     },
     handleCardRejected(cardItem) {
+      console.log("false");
+
       this.setProgressWord({ dictionaryItem: cardItem, status: false });
     },
   },

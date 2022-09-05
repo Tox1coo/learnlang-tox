@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { app } from '@/store/config';
-import { getDatabase, set, ref, onValue, get, child } from "firebase/database";
+import { getDatabase, set, ref, onValue, } from "firebase/database";
 import { getAuth } from "firebase/auth"
 
 const auth = getAuth(app);
@@ -170,7 +170,6 @@ export const dictionary = {
 	actions: {
 		getDictionaryItem({ commit, state }, dictionaryItem,) {
 			const userId = auth.currentUser.uid;
-			// переписать на onValue
 			const listRef = ref(database, `user/${userId}/groups/${dictionaryItem.group}`);
 			commit('updateImportantGroup', [])
 
@@ -178,7 +177,6 @@ export const dictionary = {
 				onValue(listRef, (snapshot) => {
 					if (snapshot.exists()) {
 						commit('updateImportantGroup', snapshot.val())
-						console.log(snapshot.val());
 						snapshot.val().forEach(element => {
 							if (element[state.nativeLangForDictionary]?.def[0].text == dictionaryItem[state.nativeLangForDictionary].def[0].text) {
 								commit('updateImportantItem', element)
@@ -224,28 +222,28 @@ export const dictionary = {
 
 			})
 		},
-		setProgressWord({ commit, state, dispatch }, { dictionaryItem, status }) {
+		async setProgressWord({ commit, state, dispatch }, { dictionaryItem, status }) {
 			const userId = auth.currentUser.uid;
 
-			const word = dispatch('getDictionaryItem', dictionaryItem);
-			word.then((result) => {
-				console.log(status);
-				console.log(dictionaryItem);
-				console.log(result);
-				if (status) result.progress += 5;
-				else if (result.progress !== 0 && !status) result.progress -= 5;
-				else if (result.progress === 0) throw 'progress = 0'
-				state.importantGroup.forEach((element, index) => {
-					if (element[state.nativeLangForDictionary]?.def[0].text == result[state.nativeLangForDictionary].def[0].text) {
-						element = result;
-						commit('updateElementImportantGroup', { element: element, index })
-						set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
-					}
+			const word = await dispatch('getDictionaryItem', dictionaryItem);
+			if (status) {
+				word.progress += 5
+				word.correct++;
+			}
+			else if (word.progress !== 0 && !status) {
+				word.progress -= 5;
+				word.incorrect++;
+			} else if (word.progress === 0) return;
+			state.importantGroup.forEach((element, index) => {
+				if (element[state.nativeLangForDictionary]?.def[0].text == word[state.nativeLangForDictionary].def[0].text) {
+					element = word;
+					commit('updateElementImportantGroup', { element: element, index });
+					set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
+					console.log(element);
+				}
 
-				})
-			}).catch(error => {
-				console.log(error);
 			})
+
 		}
 	},
 

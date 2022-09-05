@@ -1,9 +1,8 @@
 <template>
   <div class="selectgroup">
-    <h1 v-if="groupList.length === 1" class="subtitle">
+    <h1 v-if="allGroupList.length === 0" class="subtitle">
       Please add new group :)
     </h1>
-
     <div
       v-for="(group, key) in groupList"
       :key="key"
@@ -24,7 +23,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {};
@@ -32,6 +31,10 @@ export default {
   computed: {
     ...mapState({
       groupList: (state) => state.lang.groupList,
+    }),
+
+    ...mapGetters({
+      allGroupList: "lang/allGroupList",
     }),
   },
   props: {
@@ -53,6 +56,9 @@ export default {
   justify-content: space-around;
   gap: 15px;
   font-size: 1.5rem;
+  .subtitle {
+    font-size: 2.5rem;
+  }
 }
 .item {
   padding: 10px;
