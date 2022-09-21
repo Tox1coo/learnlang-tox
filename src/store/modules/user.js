@@ -84,7 +84,6 @@ export const user = {
 		async getUpload({ commit }, user) {
 			const refStorage = ref(storage, user.userState.uid + '.jpg');
 
-			const snapshot = await uploadBytes(refStorage, user.user.profilePhoto)
 			let photoURL;
 			try {
 				photoURL = await getDownloadURL(refStorage);
@@ -96,9 +95,7 @@ export const user = {
 					commit('updateAuthStage', 2)
 					commit('updateUserInfo', currentUser);
 				});
-
 			}
-
 		},
 		clearInfo({ commit, dispatch }) {
 			commit('updateError', false);
@@ -112,7 +109,6 @@ export const user = {
 						const uid = user.uid;
 						const currentUser = getAuth().currentUser
 						commit('updateUserInfo', currentUser)
-
 						dispatch('lang/checkLearnLangs', user.uid, { root: true })
 						dispatch('lang/checkGroupList', user.uid, { root: true })
 					} else {

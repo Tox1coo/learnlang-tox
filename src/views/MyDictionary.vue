@@ -98,7 +98,6 @@ export default {
   created() {
     setTimeout(() => {
       this.getTableInfoList();
-      this.checkGroupList(this.userInfo.uid);
       this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
       this.updateLearningLangForDictionary(
         this.commLearnLang.match(/-\b\w+/)[0].slice(1)

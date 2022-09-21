@@ -16,6 +16,9 @@
         ><img
           src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/45/000000/external-dictionary-online-education-flaticons-lineal-color-flat-icons.png"
       /></router-link>
+      <router-link class="nav__link" to="/testing"
+        ><img src="https://img.icons8.com/dusk/45/000000/test-passed.png"
+      /></router-link>
     </ul>
     <button
       style="padding: 0 0 5px 0; width: 45px"

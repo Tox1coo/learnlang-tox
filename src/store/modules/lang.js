@@ -289,12 +289,15 @@ export const lang = {
 				}
 			})
 		},
-		checkGroupList({ commit, state }, userID) {
-			// переписать на get
+		checkGroupList({ commit, state, dispatch }, userID) {
 			return new Promise((resolve) => {
 				get(child(ref(database), `user/${userID}/groups`)).then((snapshot) => {
-					commit('updateGroupList', snapshot.val())
-					resolve(state.groupList)
+					console.log(state.groupList.length);
+					if (state.groupList.length != undefined) {
+						commit('updateGroupList', snapshot.val());
+						dispatch('testing/getAllWordInTesting', snapshot.val(), { root: true });
+					}
+					resolve(state.groupList);
 				})
 			})
 		},
@@ -303,8 +306,6 @@ export const lang = {
 			const listRef = ref(database, `user/${userID}/groups`);
 			onValue(listRef, (snapshot) => {
 				if (snapshot.exists()) {
-					console.log(snapshot.val());
-
 					commit('updateGroupList', snapshot.val())
 				} else {
 					console.log("No data available");
@@ -327,7 +328,6 @@ export const lang = {
 		},
 
 		addGroupLang({ commit, state }, info) {
-			// const langRef = ref(database, `user/${info.userID}/groups/${info.groupName}`)
 			get(child(ref(database), `user/${info.userID}/groups/${info.groupName}`)).then((snapshot) => {
 				if (snapshot.val()?.length > 0) {
 					commit('updateErrorGroup', true)

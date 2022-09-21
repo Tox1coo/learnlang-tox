@@ -202,7 +202,6 @@ export const dictionary = {
 						commit('updateElementImportantGroup', { element: element, index })
 						set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
 					}
-
 				})
 			})
 		},
@@ -211,39 +210,29 @@ export const dictionary = {
 			dispatch('lang/listenerGroupList', null, { root: true })
 			const word = dispatch('getDictionaryItem', dictionaryItem);
 			word.then((result) => {
-
 				const index = state.importantGroup.findIndex(word =>
 					word[state.nativeLangForDictionary]?.def[0].text === result[state.nativeLangForDictionary].def[0].text
 				)
-
 				if (index !== -1) commit('deleteElementImportantGroup', index)
-
 				set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
-
 			})
 		},
 		async setProgressWord({ commit, state, dispatch }, { dictionaryItem, status }) {
 			const userId = auth.currentUser.uid;
 
 			const word = await dispatch('getDictionaryItem', dictionaryItem);
-			if (status) {
-				word.progress += 5
+			if (word.progress !== 100 && status) {
+				word.progress += 5;
 				word.correct++;
 			}
 			else if (word.progress !== 0 && !status) {
 				word.progress -= 5;
 				word.incorrect++;
 			} else if (word.progress === 0) return;
-			state.importantGroup.forEach((element, index) => {
-				if (element[state.nativeLangForDictionary]?.def[0].text == word[state.nativeLangForDictionary].def[0].text) {
-					element = word;
-					commit('updateElementImportantGroup', { element: element, index });
-					set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
-					console.log(element);
-				}
-
-			})
-
+			const indexItem = state.importantGroup.findIndex(element => element[state.nativeLangForDictionary]?.def[0].text == word[state.nativeLangForDictionary].def[0].text);
+			commit('updateElementImportantGroup', { element: word, index: indexItem });
+			set(ref(database, `user/${userId}/groups/${dictionaryItem.group}`), state.importantGroup)
+			dispatch('lang/listenerGroupList', userId, { root: true })
 		}
 	},
 

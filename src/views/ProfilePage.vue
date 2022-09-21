@@ -95,12 +95,6 @@ export default {
       return count;
     },
   },
-  created() {
-    this.getCountWordsUser();
-  },
-  methods: {
-    getCountWordsUser() {},
-  },
 };
 </script>
 

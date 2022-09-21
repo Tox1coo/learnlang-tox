@@ -138,6 +138,7 @@ export default {
     this.checkGroupList(this.userInfo.uid).then((result) => {
       this.groupListCard = result || [];
     });
+
     this.activeLang = this.commLearnLang.match(/\w+\b/)[0];
     this.updateNativeLangForDictionary(this.commLearnLang.match(/\w+\b/)[0]);
     this.updateLearningLangForDictionary(
@@ -229,12 +230,9 @@ export default {
       this.wordArr.splice(index, 1);
     },
     handleCardAccepted(cardItem) {
-      console.log("true");
       this.setProgressWord({ dictionaryItem: cardItem, status: true });
     },
     handleCardRejected(cardItem) {
-      console.log("false");
-
       this.setProgressWord({ dictionaryItem: cardItem, status: false });
     },
   },

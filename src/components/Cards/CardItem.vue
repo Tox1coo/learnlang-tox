@@ -124,13 +124,13 @@ export default {
 
           if (x > interactXThreshold) {
             this.playCard(ACCEPT_CARD);
-            this.shadow = null;
+            // this.shadow = null;
           } else if (x < -interactXThreshold) {
             this.playCard(REJECT_CARD);
-            this.shadow = null;
+            // this.shadow = null;
           } else {
             this.resetCardPosition();
-            this.shadow = null;
+            // this.shadow = null;
           }
           // доделать потом систему с прогрессом
         },
