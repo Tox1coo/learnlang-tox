@@ -123,7 +123,7 @@ export default {
       if (new Date().getDate().toString().length > 1) {
         day = new Date().getDate();
       } else {
-        day = "0" + new Date().getDate() + 1;
+        day = "0" + (new Date().getDate() + 1);
       }
       if (new Date().getUTCMonth().toString().length > 1) {
         month = new Date().getUTCMonth() + 1;
@@ -137,6 +137,9 @@ export default {
   mounted() {
     this.checkGroupList(this.userInfo.uid).then((result) => {
       this.groupListCard = result || [];
+      this.groupListCard[this.currentGroup] = this.groupListCard[
+        this.currentGroup
+      ].sort(() => Math.random() - 0.5);
     });
 
     this.activeLang = this.commLearnLang.match(/\w+\b/)[0];
@@ -145,6 +148,10 @@ export default {
       this.commLearnLang.match(/-\b\w+/)[0].slice(1)
     );
     this.listenerGroupList(this.userInfo.uid);
+  },
+  beforeUnmount() {
+    this.groupListCard = {};
+    this.activeLang = "";
   },
   methods: {
     ...mapMutations({
@@ -223,6 +230,9 @@ export default {
     },
     selectGroup(group) {
       this.updateCurrentGroup(group);
+      this.groupListCard[group] = this.groupListCard[group].sort(
+        () => Math.random() - 0.5
+      );
     },
 
     removeWord(word) {

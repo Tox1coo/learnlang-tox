@@ -65,7 +65,7 @@ export default {
     updateProgress(percent) {
       // написать тест на проверку
       setTimeout(() => {
-        const radius = this.$refs.circle.r.baseVal.value;
+        const radius = this.$refs.circle?.r.baseVal.value;
         const circumference = 2 * Math.PI * radius;
         this.$refs.circle.style.cssText = `stroke-dasharray: ${circumference} ${circumference}; stroke-dashoffset: ${circumference} `;
         function setProgress() {

@@ -34,6 +34,10 @@ export default {
     width: Number,
     errorType: String,
     modelValue: [String, Number],
+    idInput: {
+      type: String,
+      default: "",
+    },
   },
   methods: {
     clearInput(event) {

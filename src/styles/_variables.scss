@@ -1,9 +1,8 @@
-$widthnavdecs:100px;
-$heightnavmob:60px;
+$widthnavdecs: 100px;
+$heightnavmob: 60px;
 
 $widthwithnav: calc(100% - $widthnavdecs);
 $widthwithaoutnav: 100%;
-
 
 $marginwithnav: $widthnavdecs;
 $marginwithaoutnav: 0;
@@ -14,6 +13,6 @@ $primary: #fff;
 $error: #ff5353;
 $accent: #43dd;
 $linearWel: linear-gradient(to right, red 10%, rgba(#43dd, 1) 80%);
-
-$background-accent: #CBCFD2;
+$primary-correct: #7af062;
+$background-accent: #cbcfd2;
 $font-size-card: 2.2rem;

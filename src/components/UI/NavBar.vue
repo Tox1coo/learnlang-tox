@@ -73,11 +73,14 @@ export default {
     gap: 50px;
     list-style: none;
     align-items: center;
-    @media (max-width: 379px), (max-height: 379px) {
+    @media (max-width: 450px), (max-height: 379px) {
       gap: 35px;
     }
-    @media (max-width: 330px) {
+    @media (max-width: 400px) {
       gap: 20px;
+    }
+    @media (max-width: 320px) {
+      gap: 10px;
     }
   }
 
@@ -88,6 +91,15 @@ export default {
       width: 50px;
       height: 50px;
       margin-top: 15px;
+    }
+    img {
+      width: 100%;
+    }
+    @media (max-width: 400px) {
+      width: 30px;
+      height: 30px;
+      img {
+      }
     }
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
 import ProfilePage from "@/views/ProfilePage.vue";
@@ -24,7 +25,9 @@ const routes = [
     path: "/testing",
     name: "Testing",
     component: Testing,
+
   },
+
 ];
 
 
@@ -32,5 +35,7 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
+
 
 export default router;
