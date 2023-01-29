@@ -1,22 +1,13 @@
 <template>
-  <div
-    v-if="cardItem != undefined"
-    ref="interactElement"
-    :class="{
-      isAnimating: isInteractAnimating,
-      isCurrent: isCurrent,
-      nonShadow: shadow === null,
-      trueShadow: shadow,
-      falseShadow: shadow === false,
-    }"
-    :style="{ transform: transformString }"
-    class="card"
-  >
+  <div v-if="cardItem != undefined" ref="interactElement" :class="{
+    isAnimating: isInteractAnimating,
+    isCurrent: isCurrent,
+    nonShadow: shadow === null,
+    trueShadow: shadow,
+    falseShadow: shadow === false,
+  }" :style="{ transform: transformString }" class="card">
     <div class="card__speech">
-      <VolumeButton
-        :voiceLanguage="currentLanguage"
-        :word="cardItem.def[0]?.text"
-      ></VolumeButton>
+      <VolumeButton :voiceLanguage="currentLanguage" :word="cardItem.def[0]?.text"></VolumeButton>
     </div>
     <div class="card__title">
       <p>
@@ -46,12 +37,12 @@ export default {
   static: {
     interactMaxRotation: 20,
     interactOutOfSightXCoordinate: 500,
-    interactXThreshold: 100,
+    interactXThreshold: 150,
   },
   props: {
     cardItem: {
       type: Object,
-      default: () => {},
+      default: () => { },
       required: true,
     },
     isCurrent: {
@@ -104,11 +95,11 @@ export default {
           const x = this.interactPosition.x + event.dx;
 
           let rotation = interactMaxRotation * (x / interactXThreshold);
-          /*  if (x < 20 && x > -20 && this.shadow !== null) this.shadow = null;
+          if (x < 20 && x > -20 && this.shadow !== null) this.shadow = null;
           if (rotation > interactMaxRotation / 2 && this.shadow !== true)
             this.shadow = true;
           if (rotation < -interactMaxRotation / 2 && this.shadow !== false)
-            this.shadow = false; */
+            this.shadow = false;
 
           if (rotation > interactMaxRotation) rotation = interactMaxRotation;
           else if (rotation < -interactMaxRotation)
@@ -124,13 +115,13 @@ export default {
 
           if (x > interactXThreshold) {
             this.playCard(ACCEPT_CARD);
-            // this.shadow = null;
+            this.shadow = null;
           } else if (x < -interactXThreshold) {
             this.playCard(REJECT_CARD);
-            // this.shadow = null;
+            this.shadow = null;
           } else {
             this.resetCardPosition();
-            // this.shadow = null;
+            this.shadow = null;
           }
           // доделать потом систему с прогрессом
         },
@@ -212,6 +203,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
+%block-effect {
+  content: '';
+  display: block;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  transition: background-color 0.1s ease-in;
+}
+
 .card {
   display: flex;
   justify-content: center;
@@ -226,13 +230,16 @@ export default {
   font-weight: 700;
   font-size: $font-size-card;
   transition: box-shadow 0.15s cubic-bezier(0.17, 0.23, 0.08, 0.94);
+
   &.isAnimating {
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
+
   &.isCurrent {
     z-index: 1000;
     pointer-events: auto;
   }
+
   &__speech {
     position: absolute;
 
@@ -240,6 +247,7 @@ export default {
     left: 50%;
     transform: translate(-50%, 30%);
   }
+
   &__title {
     height: 50%;
     width: 100%;
@@ -249,6 +257,7 @@ export default {
     align-items: center;
     border-bottom: 1px solid #000;
   }
+
   &__translate {
     cursor: pointer;
 
@@ -258,22 +267,31 @@ export default {
     align-items: center;
     height: 50%;
     width: 100%;
+
     &-word {
       user-select: none;
     }
   }
 
   &.nonShadow {
-    box-shadow: none;
+    &::before {
+      @extend %block-effect;
+      background-color: transparent;
+    }
   }
 
   &.trueShadow {
-    box-shadow: inset 5px 15px 25px green, 10px 10px 10px green,
-      inset 10px 10px 25px green;
+    &::before {
+      @extend %block-effect;
+      background-color: rgba(lightgreen, 0.5);
+    }
   }
+
   &.falseShadow {
-    box-shadow: inset 5px 15px 25px red, 10px 10px 10px red,
-      inset 10px 10px 25px red;
+    &::before {
+      @extend %block-effect;
+      background-color: rgba(red, 0.5);
+    }
   }
 }
 </style>

@@ -82,19 +82,9 @@ html {
 	}
 
 	&--word {
-		position: absolute;
-		right: -150px;
-		top: 50%;
 		text-transform: none;
 		&:hover {
 			border-radius: 5px;
-		}
-		@media (max-width: 1042px) {
-			top: 100%;
-			right: 0;
-			left: 50%;
-
-			transform: translate(-50%, 180%);
 		}
 	}
 	&--selectgroup {

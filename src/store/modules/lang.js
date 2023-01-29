@@ -217,6 +217,7 @@ export const lang = {
 				console.log(error);
 			})
 		},
+
 		setUserLearnLangs({ commit, state }, userID) {
 			if (state.nativeLang != null && state.learnLang != null) {
 				set(ref(database, `user/${userID}/learnLangs`), `${state.learnLang.code}-${state.nativeLang.code}`);
@@ -262,6 +263,8 @@ export const lang = {
 			}).then((response) => {
 				if (response.data.def.length > 0) {
 					dispatch("parallelCrossing", { word: response.data, date, group })
+					console.log(response.data.def);
+
 					commit('updateErrorLang', false)
 					return response.def
 				} else {
@@ -281,6 +284,7 @@ export const lang = {
 			}).then((response) => {
 				if (response.data.def.length > 0) {
 					const lang = { [first]: word, [second]: response.data }
+					console.log(lang);
 					commit('updateWord', { word: lang, date, group })
 					commit('updateErrorLang', false)
 					return response.def

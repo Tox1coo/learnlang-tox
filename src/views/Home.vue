@@ -3,88 +3,54 @@
     <div class="block__inner">
       <div class="block__inner-left block__left">
         <div class="block__left-top">
-          <div class="block__left-input">
-            <form
-              @submit.prevent="addWordToLearn"
-              class="block__inner-form"
-              action=""
-            >
-              <MyInput
-                v-model="word"
-                :clear="true"
-                :error="errorLang"
-                :placeholderInput="'Write words and press Enter'"
-              ></MyInput>
-              <DropLang
-                @removeWord="removeWord"
-                v-if="wordArr.length > 0"
-                v-model:dropList="wordArr"
-                :dropLang="activeLang"
-              ></DropLang>
-            </form>
-          </div>
+
           <div class="block__left-addgroup">
             <MyButtonAuth @click="showGroup = true" class="btn--selectgroup">
               select group
             </MyButtonAuth>
 
-            <MyButtonAuth class="btn--addgroup" @click="show = true"
-              >Add Group</MyButtonAuth
-            >
+            <MyButtonAuth class="btn--addgroup" @click="show = true">Add Group</MyButtonAuth>
           </div>
         </div>
         <div v-if="this.currentGroup !== ''" class="block__left-cards">
-          <CardList
-            v-if="groupListCard[currentGroup]?.length > 1"
-            :language="activeLang"
-            :cards="groupListCard[currentGroup]"
-            @cardAccepted="handleCardAccepted"
-            @cardRejected="handleCardRejected"
-            @hideCard="removeCardFromDeck"
-          ></CardList>
+          <CardList v-if="groupListCard[currentGroup]?.length > 1" :language="activeLang"
+            :cards="groupListCard[currentGroup]" @cardAccepted="handleCardAccepted" @cardRejected="handleCardRejected"
+            @hideCard="removeCardFromDeck"></CardList>
           <div v-else class="block__left-empty block__left-empty--word">
             <div class="title">Please add more word</div>
           </div>
           <div class="block__left-btns">
-            <MyButtonAuth
-              @click="activeLang = commLearnLang?.substr(0, 2)"
-              class="btn--lang"
-              >{{ commLearnLang }}</MyButtonAuth
-            >
-            <MyButtonAuth
-              @click="activeLang = commLearnLang?.substr(3, 5)"
-              class="btn--lang"
-              >{{ commLearnLang?.substr(3, 5) }}-{{
-                commLearnLang?.substr(0, 2)
-              }}</MyButtonAuth
-            >
+            <MyButtonAuth @click="activeLang = commLearnLang?.substr(0, 2)" class="btn--lang">{{ commLearnLang }}
+            </MyButtonAuth>
+            <MyButtonAuth @click="activeLang = commLearnLang?.substr(3, 5)" class="btn--lang">{{
+              commLearnLang?.substr(3, 5)
+            }}-{{
+  commLearnLang?.substr(0, 2)
+}}</MyButtonAuth>
           </div>
-          <RecordingBlock
-            v-if="isShowRecorder"
-            v-model:isShowing="isShowRecorder"
-            :currentLanguage="activeLang"
-          ></RecordingBlock>
+          <RecordingBlock v-if="isShowRecorder" v-model:isShowing="isShowRecorder" :currentLanguage="activeLang">
+          </RecordingBlock>
         </div>
         <div v-else class="block__left-empty">
-          <div class="title">Please select/create group</div>
+          <div class="title">Please select/add group</div>
         </div>
       </div>
       <div class="block__inner-right">
-        <SynonymsCard
-          v-if="currentWord != null"
-          :synonymWords="currentWord.def"
-        ></SynonymsCard>
+        <SynonymsCard v-if="currentWord != null" :synonymWords="currentWord.def"></SynonymsCard>
       </div>
     </div>
   </div>
-  <Modal v-model:show="show"><AddGroupLang></AddGroupLang></Modal>
-  <Modal v-model:show="showGroup"
-    ><SelectGroupLang
-      @selectGroup="selectGroup"
-      @removeGroup="removeGroup"
-      v-model:show="showGroup"
-    ></SelectGroupLang
-  ></Modal>
+  <Modal v-model:show="show">
+    <AddGroupLang></AddGroupLang>
+  </Modal>
+  <Modal v-model:show="showGroup">
+    <SelectGroupLang @addWord="addWordsToGroup" @selectGroup="selectGroup" @removeGroup="removeGroup"
+      v-model:show="showGroup"></SelectGroupLang>
+  </Modal>
+  <Modal v-model:show="showGroupAddingWord">
+    <ModalAddNewWord v-model:show="showGroupAddingWord" :group="groupAddingWord" :activeLang="activeLang">
+    </ModalAddNewWord>
+  </Modal>
 </template>
 
 <script>
@@ -94,6 +60,7 @@ import SelectGroupLang from "@/components/LangItem/SelectGroupLang.vue";
 import CardList from "@/components/Cards/CardList.vue";
 import SynonymsCard from "@/components/SynonymsCard/SynonymsCard.vue";
 import RecordingBlock from "@/components/Recording/RecordingBlock.vue";
+import ModalAddNewWord from "@/components/LangItem/ModalAddNewWord.vue";
 export default {
   name: "Home",
   data() {
@@ -106,6 +73,8 @@ export default {
       activeLang: "",
       isShowRecorder: true,
       groupListCard: {},
+      showGroupAddingWord: false,
+      groupAddingWord: ''
     };
   },
   computed: {
@@ -235,16 +204,17 @@ export default {
       );
     },
 
-    removeWord(word) {
-      const index = this.wordArr.indexOf(word);
-      this.wordArr.splice(index, 1);
-    },
+
     handleCardAccepted(cardItem) {
       this.setProgressWord({ dictionaryItem: cardItem, status: true });
     },
     handleCardRejected(cardItem) {
       this.setProgressWord({ dictionaryItem: cardItem, status: false });
     },
+    addWordsToGroup(group) {
+      this.groupAddingWord = group;
+      this.showGroupAddingWord = true
+    }
   },
   components: {
     AddGroupLang,
@@ -252,6 +222,7 @@ export default {
     CardList,
     SynonymsCard,
     RecordingBlock,
+    ModalAddNewWord
   },
 };
 </script>
@@ -263,13 +234,16 @@ export default {
       position: relative;
       width: 300px;
     }
+
     &-right {
       width: 50%;
+
       @media (max-width: 700px) {
         width: 100%;
       }
     }
   }
+
   &__left-empty {
     flex: 1 1 auto;
     display: flex;
@@ -277,40 +251,45 @@ export default {
     align-items: center;
     width: 100%;
     height: 50vh;
+
     @media (max-width: 700px) {
       height: 100vh;
     }
+
     &--word {
       height: 50vh;
     }
   }
+
   &__left {
     width: 50%;
     display: flex;
     gap: 15px;
     flex-direction: column;
     align-items: flex-start;
+
     &-top {
       width: 100%;
       display: flex;
       gap: 15px;
       align-items: center;
+
       @media (max-width: 800px) {
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
       }
     }
+
     &-addgroup {
       display: flex;
       flex: 1 1 auto;
       gap: 5px;
       align-items: flex-start;
-      @media (max-width: 800px) {
-        align-items: center;
-        justify-content: center;
-      }
+      justify-content: center;
+
     }
+
     &-cards {
       display: flex;
       flex-direction: column;
@@ -318,10 +297,12 @@ export default {
       width: 100%;
       justify-content: center;
       align-items: center;
+
       @media (max-width: 1px) {
         gap: 15px;
       }
     }
+
     @media (max-width: 700px) {
       width: 100%;
     }

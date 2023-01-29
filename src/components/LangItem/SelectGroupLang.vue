@@ -3,19 +3,15 @@
     <h1 v-if="allGroupList.length === 0" class="subtitle">
       Please add new group :)
     </h1>
-    <div
-      v-for="(group, key) in groupList"
-      :key="key"
-      :class="{ hide: groupList[key] === '' }"
-    >
-      <div
-        @click="$emit('selectGroup', key), $emit('update:show', false)"
-        v-if="groupList[key] !== ''"
-        class="item"
-      >
+    <div v-for="(group, key) in groupList" :key="key" :class="{ hide: groupList[key] === '' }">
+      <div @click="$emit('selectGroup', key), $emit('update:show', false)" v-if="groupList[key] !== ''" class="item"
+        title="Select group">
         {{ key }}
         <div @click.stop="$emit('removeGroup', key)" class="remove">
-          <div class="remove__item"></div>
+          <div class="remove__item" title="Delete group"></div>
+        </div>
+        <div @click.stop="$emit('addWord', key)" class="add">
+          <div class="add__item" title="Add word"></div>
         </div>
       </div>
     </div>
@@ -56,10 +52,12 @@ export default {
   justify-content: space-around;
   gap: 15px;
   font-size: 1.5rem;
+
   .subtitle {
     font-size: 2.5rem;
   }
 }
+
 .item {
   padding: 10px;
   border: 1px solid #ccc;
@@ -67,13 +65,16 @@ export default {
   cursor: pointer;
   position: relative;
   transition: all 0.4s ease 0s;
+
   &:hover {
     background-color: rgba(#000, 0.1);
   }
 }
+
 .hide {
   display: none;
 }
+
 .remove {
   position: absolute;
   width: 16px;
@@ -82,6 +83,7 @@ export default {
   right: -10px;
   z-index: 1000;
   cursor: pointer;
+
   &__item {
     position: relative;
     width: 16px;
@@ -91,9 +93,11 @@ export default {
     border: 1px solid #ccc;
     border-radius: 50%;
     transition: all 0.4s ease 0s;
+
     &:hover {
       background-color: rgba(#000, 0.1);
     }
+
     &:after {
       content: "";
       display: block;
@@ -105,6 +109,7 @@ export default {
       background-color: $error;
       position: absolute;
     }
+
     &:before {
       content: "";
       display: block;
@@ -115,6 +120,25 @@ export default {
       transform: translate(-50%, -50%) rotate(-45deg);
       background-color: $error;
       position: absolute;
+    }
+  }
+}
+
+.add {
+  @extend .remove;
+  left: -10px;
+
+  &__item {
+    @extend .remove__item;
+
+    &::before {
+      transform: translate(-50%, -50%);
+      background-color: $primary-correct;
+    }
+
+    &::after {
+      transform: translate(-50%, -50%) rotate(90deg);
+      background-color: $primary-correct;
     }
   }
 }

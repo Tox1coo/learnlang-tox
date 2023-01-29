@@ -1,43 +1,31 @@
 <template>
   <table class="dictionary__table">
     <thead>
-      <th
-        class="dictionary__table-column"
-        v-for="tableItem in tableList"
-        :key="tableItem"
-        @click="$emit('sortedDictionary', tableItem)"
-      >
+      <th class="dictionary__table-column" v-for="tableItem in tableList" :key="tableItem"
+        @click="$emit('sortedDictionary', tableItem)">
         {{ tableItem.title }}
         <div class="sort">
-          <div
-            :class="{
-              'active-top': tableItem.direction === 'top',
-              'active-down': tableItem.direction === 'down',
-            }"
-            class="sort__item"
-          ></div>
+          <div :class="{
+  'active-top': tableItem.direction === 'top',
+  'active-down': tableItem.direction === 'down',
+}" class="sort__item"></div>
         </div>
       </th>
     </thead>
     <tbody>
-      <DictionaryTableRow
-        v-for="(tableInfoItem, index) in searchAndSorted"
+      <DictionaryTableRow v-for="(tableInfoItem, index) in wordsList"
         :key="`${index}-${tableInfoItem.progress}-${tableInfoItem[getOriginalLang].def[0].text}`"
-        :tableItem="tableInfoItem"
-        :originalLang="getOriginalLang"
-        :learningLang="getLearningLang"
-        @click="
-          $emit(
-            'showInfoItem',
-            {
-              item: tableInfoItem,
-              nativeLang: getOriginalLang,
-              learningLang: getLearningLang,
-            },
-            true
-          )
-        "
-      ></DictionaryTableRow>
+        :tableItem="tableInfoItem" :originalLang="getOriginalLang" :learningLang="getLearningLang" @click="
+  $emit(
+    'showInfoItem',
+    {
+      item: tableInfoItem,
+      nativeLang: getOriginalLang,
+      learningLang: getLearningLang,
+    },
+    true
+  )
+        "></DictionaryTableRow>
     </tbody>
   </table>
 </template>
@@ -46,6 +34,11 @@
 import { mapGetters, mapState } from "vuex";
 import DictionaryTableRow from "@/components/dictionary/DictionaryTableRow.vue";
 export default {
+  data() {
+    return {
+      wordsList: []
+    }
+  },
   props: {
     tableList: {
       type: Array,
@@ -55,7 +48,7 @@ export default {
     tableInfoList: {
       type: Object,
       required: true,
-      default: () => {},
+      default: () => { },
     },
     nameGroup: {
       type: String,
@@ -80,7 +73,11 @@ export default {
       return this.commLearnLang.match(/-\b\w+/)[0].slice(1);
     },
   },
-
+  watch: {
+    searchAndSorted(wordsList) {
+      this.wordsList = wordsList;
+    }
+  },
   components: { DictionaryTableRow },
 };
 </script>
@@ -91,6 +88,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
 %pseudo-block {
   content: "";
   position: absolute;
@@ -106,6 +104,7 @@ export default {
   pointer-events: none;
   transition: all 0.2s ease 0s;
 }
+
 .dictionary__table {
   width: 100%;
   border: 1px solid #000;
@@ -115,6 +114,7 @@ export default {
   font-size: 1.5rem;
   margin-top: 15px;
   border-radius: 5px;
+
   thead {
     .dictionary__table-column {
       cursor: pointer;
@@ -127,9 +127,11 @@ export default {
     border-left: 1px solid #000;
     border-bottom: 1px solid #000;
     position: relative;
+
     &:first-child {
       border-left: none;
     }
+
     .sort {
       right: 20px;
       top: 50%;
@@ -137,9 +139,11 @@ export default {
       position: absolute;
       width: 10px;
       height: 20px;
+
       &__item {
         height: 100%;
         position: relative;
+
         &::after {
           @extend %pseudo-block;
         }
@@ -151,25 +155,30 @@ export default {
           transform: rotate(-180deg);
         }
       }
+
       @media (max-width: 835px) {
         right: 5px;
       }
     }
   }
+
   @media (max-width: 625px) {
     width: 100%;
   }
 }
+
 .active-top {
   &::before {
     border-color: #000 transparent transparent transparent !important;
   }
 }
+
 .active-down {
   &::after {
     border-color: #000 transparent transparent transparent !important;
   }
 }
+
 /* .progress {
   width: 65px;
   width: 65px;
@@ -203,6 +212,7 @@ export default {
   width: 60px;
   height: 60px;
   position: relative;
+
   svg {
     circle {
       transform-origin: center;
@@ -210,6 +220,7 @@ export default {
       transition: stroke-dashoffset 0.4s ease 0s;
     }
   }
+
   &__number {
     position: absolute;
     top: 50%;

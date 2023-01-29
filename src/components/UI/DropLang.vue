@@ -7,15 +7,12 @@
           <div class="remove__item"></div>
         </div>
       </div>
-      <a
-        @click.stop="updatingGroupWord()"
-        class="btn btn--auth btn--word"
-        style="width: 130px; font-size: 1rem"
-      >
-        Add Words
-      </a>
+
     </div>
   </div>
+  <button @click.stop="updatingGroupWord()" class="btn btn--auth btn--word" style="width: 130px; font-size: 1rem">
+    Add Words
+  </button>
 </template>
 
 <script>
@@ -25,12 +22,12 @@ export default {
   props: {
     dropList: Array,
     dropLang: String,
+    group: String,
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       groupList: (state) => state.lang.groupList,
-      currentGroup: (state) => state.lang.currentGroup,
     }),
   },
   methods: {
@@ -38,9 +35,9 @@ export default {
       updateGroupWord: "lang/updateGroupWord",
     }),
     updatingGroupWord() {
-      this.groupList[this.currentGroup] = [
+      this.groupList[this.group] = [
         ...this.dropList,
-        ...this.groupList[this.currentGroup],
+        ...this.groupList[this.group],
       ];
       this.$emit("update:dropList", []);
       this.updateGroupWord({ userID: this.userInfo.uid });
@@ -51,15 +48,14 @@ export default {
 
 <style scoped lang="scss">
 .drop {
-  z-index: 1100;
-  position: absolute;
   width: 100%;
   min-height: 100px;
   height: fit-content;
   border: 1px solid #cbcfd2;
   border-radius: 10px;
-  padding: 10px;
+  padding: 10px 20px 10px 10px;
   background-color: transparent;
+
   &__inner {
     z-index: 1000;
     display: flex;
@@ -67,18 +63,15 @@ export default {
     flex-wrap: wrap;
     position: relative;
   }
+
   &__item {
     font-size: 1.5rem;
     position: relative;
   }
-  @media (max-width: 1042px) {
-    background-color: rgba(#ccc, 0.98);
-  }
-  @media (max-width: 360px) {
-    width: 80%;
-    left: 50%;
-    transform: translate(-50%);
-  }
+
+  margin-bottom: 1.5rem;
+
+
 }
 
 .remove {
@@ -88,6 +81,7 @@ export default {
   top: 0;
   right: -12px;
   cursor: pointer;
+
   &__item {
     position: relative;
     width: 12px;
@@ -97,9 +91,11 @@ export default {
     border: 1px solid #ccc;
     border-radius: 50%;
     transition: all 0.4s ease 0s;
+
     &:hover {
       background-color: rgba(#fff, 0.5);
     }
+
     &:after {
       content: "";
       display: block;
@@ -111,6 +107,7 @@ export default {
       background-color: $error;
       position: absolute;
     }
+
     &:before {
       content: "";
       display: block;
